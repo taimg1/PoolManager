@@ -5,13 +5,13 @@ namespace PoolMS.Core
 {
     public class PoolContext: DbContext
     {
-        public DbSet<User> User => Set<User>();
-        public DbSet<Payment> Payment => Set<Payment>();
-        public DbSet<Subscription> Subscription => Set<Subscription>();
-        public DbSet<Reservation> Reservation => Set<Reservation>();
-        public DbSet<PoolSize> PoolSize => Set<PoolSize>();
-        public DbSet<Pool> Pool => Set<Pool>();
-        public DbSet<Visit> Visit => Set<Visit>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<Subscription> Subscriptions => Set<Subscription>();
+        public DbSet<Reservation> Reservations => Set<Reservation>();
+        public DbSet<PoolSize> PoolSizes => Set<PoolSize>();
+        public DbSet<Pool> Pools => Set<Pool>();
+        public DbSet<Visit> Visits => Set<Visit>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 

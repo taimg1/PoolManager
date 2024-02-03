@@ -1,0 +1,6 @@
+@PoolMS.API_HostAddress = http://localhost:5208
+
+GET {{PoolMS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

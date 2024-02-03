@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolMS.Core;
 
@@ -11,9 +12,11 @@ using PoolMS.Core;
 namespace PoolMS.Core.Migrations
 {
     [DbContext(typeof(PoolContext))]
-    partial class PoolContextModelSnapshot : ModelSnapshot
+    [Migration("20240203134841_change-visit")]
+    partial class changevisit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,9 +181,6 @@ namespace PoolMS.Core.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Admin")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .IsRequired()

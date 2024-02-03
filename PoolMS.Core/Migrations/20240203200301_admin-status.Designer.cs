@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolMS.Core;
 
@@ -11,9 +12,11 @@ using PoolMS.Core;
 namespace PoolMS.Core.Migrations
 {
     [DbContext(typeof(PoolContext))]
-    partial class PoolContextModelSnapshot : ModelSnapshot
+    [Migration("20240203200301_admin-status")]
+    partial class adminstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

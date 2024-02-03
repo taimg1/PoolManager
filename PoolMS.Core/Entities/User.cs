@@ -18,6 +18,7 @@ namespace PoolMS.Core.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Phone { get; set; }
+        public bool Admin { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<Subscription> Subscriptions { get; set; }
 

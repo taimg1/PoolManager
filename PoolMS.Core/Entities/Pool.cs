@@ -15,6 +15,7 @@ namespace PoolMS.Core.Entities
         public int Id { get; set; }
         public virtual PoolSize Size { get; set; }
         public int MaxCapacity { get; set; }
+        public int Temperature { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
 
     public override string ToString()

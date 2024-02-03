@@ -15,7 +15,7 @@ namespace PoolMS.Core.Entities
         public int Id { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public virtual Reservation Reservation { get; set; }
+        public virtual Reservation? Reservation { get; set; }
         public int StayTime { get; set; }
         public override string ToString()
         {
