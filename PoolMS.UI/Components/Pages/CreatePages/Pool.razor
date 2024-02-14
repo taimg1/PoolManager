@@ -34,6 +34,7 @@
     private async Task HandleSubmit()
     {
         await PoolService.AddAsync(pool);
+        Console.WriteLine(pool.TotalCapacity);
         NavigationManager.NavigateTo("/pool_poolsize");
     }
 

@@ -7,7 +7,6 @@ using PoolMS.Service.Interface;
 using PoolMS.Service.JWT;
 using PoolMS.UI.Components;
 using PoolMS.UI.Interfaces;
-using PoolMS.UI.Middleware;
 using PoolMS.UI.Service;
 using System.Text;
 
@@ -38,23 +37,7 @@ namespace PoolMS.UI
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            //builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-          
-
-            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //.AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
-            //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = "YourIssuer",
-            //        ValidAudience = "YourAudience",
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey"))
-            //    };
-            //});
+            
 
             var app = builder.Build();
 
@@ -72,7 +55,7 @@ namespace PoolMS.UI
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.UseTokenFromBodyMiddleware();
+
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
