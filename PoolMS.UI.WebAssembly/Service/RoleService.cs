@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 
-namespace PoolMS.Service.Service
+namespace PoolMS.UI.WebAssembly.Service
 {
     public class RoleService : IService<RoleDto, RoleCreateDto, RoleUpdateDto>
     {

@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using PoolMS.Service.DTO;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 
 namespace PoolMS.UI.WebAssembly.Auth
@@ -29,6 +30,45 @@ namespace PoolMS.UI.WebAssembly.Auth
             await _localStorage.SetItemAsync("jwt", tokenResponse.Token);
 
             return true;
+        }
+        public async Task SetJwtTokenInHeader()
+        {
+            var token = await _localStorage.GetItemAsync<string>("jwt");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+        public async Task CheckAndRemoveExpiredToken()
+        {
+            var token = await _localStorage.GetItemAsync<string>("jwt");
+            if (!string.IsNullOrEmpty(token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                if (jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    await _localStorage.RemoveItemAsync("jwt");
+                }
+            }
+        }
+        public async Task<bool> IsUserAuthenticated()
+        {
+            var token = await _localStorage.GetItemAsync<string>("jwt");
+            if (!string.IsNullOrEmpty(token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                if (jwtToken.ValidTo > DateTime.UtcNow)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public async Task Logout()
+        {
+            await _localStorage.RemoveItemAsync("jwt");
         }
     }
     public class TokenResponse

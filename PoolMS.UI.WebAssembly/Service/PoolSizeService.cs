@@ -2,21 +2,26 @@
 using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
+using PoolMS.UI.WebAssembly.Auth;
 
-namespace PoolMS.Service.Service
+namespace PoolMS.UI.WebAssembly.Service
 {
     public class PoolSizeService : IService<PoolSizeDto, PoolSizeCreateDto, PoolSizeUpdateDto>
     {
         private readonly HttpClient _httpClient;
-        public PoolSizeService(HttpClient httpClient)
+        private readonly AuthService _authService;
+
+        public PoolSizeService(HttpClient httpClient, AuthService authService)
         {
             _httpClient = httpClient;
+            _authService = authService;
         }
 
         public List<PoolSizeDto> ItemList { get; set; } = new List<PoolSizeDto>();
 
         public async Task AddAsync(PoolSizeCreateDto entity)
         {
+            await _authService.SetJwtTokenInHeader();
             await _httpClient.PostAsJsonAsync("api/poolsize/add", entity);
         }
 

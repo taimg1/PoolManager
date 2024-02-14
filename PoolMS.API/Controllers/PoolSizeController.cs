@@ -42,7 +42,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddPoolSize([FromForm] PoolSizeCreateDto poolSizeCreateDto)
+        public async Task<IActionResult> AddPoolSize(PoolSizeCreateDto poolSizeCreateDto)
         {
             if (poolSizeCreateDto.Title == null)
                 return BadRequest("Title cannot be null");

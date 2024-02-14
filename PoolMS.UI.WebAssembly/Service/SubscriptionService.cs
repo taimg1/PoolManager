@@ -2,7 +2,7 @@
 using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
-namespace PoolMS.Service.Service
+namespace PoolMS.UI.WebAssembly.Service
 {
     public class SubscriptionService : IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto>
     {

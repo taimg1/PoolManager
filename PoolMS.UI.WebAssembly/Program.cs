@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using PoolMS.Service.Interface;
-using PoolMS.Service.Service;
 using PoolMS.Service.DTO;
 using PoolMS.UI.WebAssembly.Auth;
 using Blazored.LocalStorage;
+using PoolMS.UI.WebAssembly.Service;
 
 namespace PoolMS.UI.WebAssembly
 {
@@ -30,7 +30,7 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<UserService>();
-
+            builder.Services.AddAuthorizationCore();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

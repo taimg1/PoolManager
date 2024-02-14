@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using PoolMS.Service.DTO;
 
-namespace PoolMS.UI.Service.Helper
+namespace PoolMS.UI.WebAssembly.Helper
 {
     public class MapperProfile : Profile
     {

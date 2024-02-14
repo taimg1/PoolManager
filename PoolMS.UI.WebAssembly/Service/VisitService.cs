@@ -3,7 +3,7 @@ using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace PoolMS.Service.Service
+namespace PoolMS.UI.WebAssembly.Service
 {
     public class VisitService : IService<VisitDto, VisitCreateDto, VisitUpdateDto>
     {
