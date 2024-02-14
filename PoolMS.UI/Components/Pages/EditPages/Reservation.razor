@@ -1,0 +1,74 @@
+﻿@page "/reservation{Id}"
+@page "/reservation"
+
+@inject IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto> ReservationService
+@inject NavigationManager NavigationManager
+@inject IMapper _mapper
+
+
+<EditForm Model="reservation" class="form-group" OnSubmit="HandleSubmit">
+    <div class="row mt-5 ">
+        <div class="col-12 col-md-3 border border-dark rounded shadow-sm  mx-auto ">
+            <div class="form-group">
+                <h2>Reservation</h2>
+            </div>
+            <div class="form-floating mb-3">
+                 <InputNumber TValue="int" class="form-control" id="SubscriptionIdInput" @bind-Value="reservation.SubscriptionId" placeholder="Subscription id"></InputNumber>
+                <label for="SubscriptionIdInput">Subscription id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputDate TValue="DateTime" class="form-control" id="DateInput" @bind-Value="reservation.Date"  placeholder="Date"></InputDate>
+                <label for="DateInput">Date</label>
+            </div>
+            <div class="form-floating mb-3">
+                 <InputNumber TValue="int" class="form-control" id="PoolIdInput" @bind-Value="reservation.PoolId" placeholder="Pool id"></InputNumber>
+                <label for="PoolIdInput">Pool id</label>
+            </div>
+            <div class="form-floating mb-3 text-center">
+                <button class="btn btn-primary" type="submit">@buttonName</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public string buttonName { get; set; }
+    ReservationUpdateDto reservation = null;
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var result = await ReservationService.GetByIdAsync((int)Id);
+            if (result is not null)
+            {
+                reservation = _mapper.Map<ReservationUpdateDto>(result);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/reservation");
+            }
+        }
+    }
+    protected override void  OnInitialized()
+    {
+        buttonName = Id is null ? "Add" : "Edit";
+    }
+    private async Task HandleSubmit()
+    {
+        if (Id is not null)
+        {
+            await ReservationService.UpdateAsync(reservation);
+        }
+        else
+        {
+            await ReservationService.AddAsync(_mapper.Map<ReservationCreateDto>(reservation));
+        }
+        NavigationManager.NavigateTo("/reservation");
+    }
+}
+
+ 
+
+

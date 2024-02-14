@@ -13,13 +13,17 @@ namespace PoolMS.Core.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
+        public DateTime Date { get; set; }
         public virtual Reservation? Reservation { get; set; }
+        public virtual User User { get; set; }
+        public virtual Pool Pool { get; set; }
         public int StayTime { get; set; }
         public override string ToString()
         {
-            return $"{StartTime};{EndTime};{Reservation.Id};{StayTime}";
+            return $"{Id};{Date};{Reservation.Id};{StayTime};{User.Id};{Pool.Id}";
         }
+
     }
+
 }

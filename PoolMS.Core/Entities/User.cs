@@ -18,13 +18,14 @@ namespace PoolMS.Core.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Phone { get; set; }
-        public bool Admin { get; set; }
+        public virtual Role Role { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<Subscription> Subscriptions { get; set; }
+        public virtual ICollection<Visit> Visits { get; set; }
 
         public override string ToString()
         {
-            return $"{Fname};{Sname};{Email};{Phone}";
+            return $"{Id};{Fname};{Sname};{Email};{Phone};{Role.Id}";
         }
     }
 }

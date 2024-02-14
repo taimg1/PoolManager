@@ -19,7 +19,7 @@ namespace PoolMS.Core.Entities
         public virtual ICollection<Visit> Visits { get; set; }
         public override string ToString()
         {
-            return $"{Subscription.Id};{Date};{Pool.Id}";
+            return $"{Id};{Subscription.Id};{Date};{Pool.Id}";
         }
     }
 }

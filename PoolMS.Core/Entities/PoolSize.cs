@@ -20,7 +20,7 @@ namespace PoolMS.Core.Entities
         public virtual ICollection<Pool> Pools { get; set; }
         public override string ToString()
         {
-            return $"{Title};{Width};{Height};{Length}";
+            return $"{Id};{Title};{Width};{Height};{Length}";
         }
     }
 }

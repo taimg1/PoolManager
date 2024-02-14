@@ -14,13 +14,15 @@ namespace PoolMS.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public virtual PoolSize Size { get; set; }
-        public int MaxCapacity { get; set; }
+        public int TotalCapacity { get; set; }  
         public int Temperature { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Visit> Visits { get; set; }
 
-    public override string ToString()
+
+        public override string ToString()
         {
-            return $"{Size.Title};{MaxCapacity}";
+            return $"{Id};{Size.Id};{TotalCapacity};{Temperature}";
         }
     }
 }

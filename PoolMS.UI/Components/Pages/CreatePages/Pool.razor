@@ -1,0 +1,40 @@
+﻿@page "/pool/create"
+
+@inject IService<PoolDto, PoolCreateDto, PoolUpdateDto> PoolService
+@inject NavigationManager NavigationManager
+@inject IMapper _mapper
+
+<EditForm Model="pool" class="form-group" OnSubmit="HandleSubmit">
+
+    <div class="row mt-5 ">
+        <div class="col-12 col-md-3 border border-dark rounded shadow-sm  mx-auto ">
+            <div class="form-group">
+                <h2>Pool</h2>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" @bind-Value="pool.SizeId" id="floatingInput" placeholder="Size id"></InputNumber>
+                <label for="floatingInput">Size id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" @bind-Value="pool.TotalCapacity" id="CapacityInput" placeholder="Total capacity"></InputNumber>
+                <label for="CapacityInput">Total capacity</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" @bind-Value="pool.Temperature" id="TemperatureInput" placeholder="Temperature"></InputNumber>
+                <label for="TemperatureInput">Temperature</label>
+            </div>
+            <div class="form-floating mb-3 text-center">
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    PoolCreateDto pool = new PoolCreateDto();
+    private async Task HandleSubmit()
+    {
+        await PoolService.AddAsync(pool);
+        NavigationManager.NavigateTo("/pool_poolsize");
+    }
+
+}

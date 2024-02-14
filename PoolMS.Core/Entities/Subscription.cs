@@ -15,11 +15,13 @@ namespace PoolMS.Core.Entities
         public int Id { get; set; }
         public virtual User User { get; set; }
         public virtual SubType SubType { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
     
         public override string ToString()
         {
-            return $"{User.Id};{SubType}";
+            return $"{Id};{User.Id};{SubType.Id};{StartDate};{EndDate}";
         }
     }
 }

@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoolMS.Core", "PoolMS.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoolMS.Repository", "PoolMS.Repository\PoolMS.Repository.csproj", "{7D0A612D-DB4B-4835-8A67-A503D83AA75D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoolMS.Service", "PoolMS.Service\PoolMS.Service.csproj", "{8FAD4879-263F-4D4F-B01F-2D6DE85C48E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoolMS.Service", "PoolMS.Service\PoolMS.Service.csproj", "{8FAD4879-263F-4D4F-B01F-2D6DE85C48E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoolMS.API", "PoolMS.API\PoolMS.API.csproj", "{758F0915-F45E-4448-85B8-A35E3AA8B016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoolMS.API", "PoolMS.API\PoolMS.API.csproj", "{758F0915-F45E-4448-85B8-A35E3AA8B016}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoolMS.UI", "PoolMS.UI\PoolMS.UI.csproj", "{13C82EFF-4993-49B9-9F16-99D07DE8FA1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{758F0915-F45E-4448-85B8-A35E3AA8B016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{758F0915-F45E-4448-85B8-A35E3AA8B016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{758F0915-F45E-4448-85B8-A35E3AA8B016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C82EFF-4993-49B9-9F16-99D07DE8FA1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C82EFF-4993-49B9-9F16-99D07DE8FA1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C82EFF-4993-49B9-9F16-99D07DE8FA1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C82EFF-4993-49B9-9F16-99D07DE8FA1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

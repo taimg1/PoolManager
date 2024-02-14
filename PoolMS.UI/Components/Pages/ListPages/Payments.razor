@@ -1,0 +1,46 @@
+﻿@page "/payments"
+
+@inject IService<PaymentDto, PaymentCreateDto, Payment> PaymentService
+@inject NavigationManager NavigationManager
+
+<div class="row mt-5 d-flex justify-content-around">
+    <div class="col-12 col-md-5 shadow-sm mx-5 ">
+        <div class="form-floating mb-3">
+            <h2>Payment history</h2>
+        </div>
+        <div class="form-floating mb-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Payment number</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     @foreach(var payment in PaymentService.ItemList)
+                     {
+                        <tr>
+                            <td>@payment.Id</td>
+                            <td>@payment.PaymentDay</td>
+                            <td>@payment.Amount</td>
+                            <td>
+                            <button class="btn btn-danger"
+                                        @onclick="()=> PaymentService.DeleteAsync(payment.Id)">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await PaymentService.GetAllAsync();
+    }
+}

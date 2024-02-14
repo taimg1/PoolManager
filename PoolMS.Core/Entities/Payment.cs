@@ -18,7 +18,7 @@ namespace PoolMS.Core.Entities
         public DateTime PaymentDay { get; set; }
         public override string ToString()
         {
-            return $"{User.Id};{Amount};{PaymentDay}";
+            return $"{Id};{User.Id};{Amount};{PaymentDay}";
         }
     }
 }
