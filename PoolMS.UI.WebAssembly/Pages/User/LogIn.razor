@@ -2,7 +2,9 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
-@inject IJSRuntime JSRuntime
+@inject IUserService UserService
+@inject AuthService AuthService
+
 
 <EditForm Model="user" OnValidSubmit="HandleValidSubmit">
     <div class="row mt-5">
@@ -31,7 +33,15 @@
 
         private async Task HandleValidSubmit()
         {
+            var result = await AuthService.Login(user);
+            if (result != null)
+            {
+                Console.WriteLine("Login success");
+                NavigationManager.NavigateTo("/");
+            }
+            NavigationManager.NavigateTo("/");
            
+
         }
 
 }

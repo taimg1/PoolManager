@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using PoolMS.Service.Interface;
 using PoolMS.Service.Service;
 using PoolMS.Service.DTO;
+using PoolMS.UI.WebAssembly.Auth;
+using Blazored.LocalStorage;
 
 namespace PoolMS.UI.WebAssembly
 {
@@ -25,6 +27,9 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IService<RoleDto, RoleCreateDto, RoleUpdateDto>, RoleService>();
             builder.Services.AddScoped<IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto>, PaymentService>();
+            builder.Services.AddScoped<AuthService>();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<UserService>();
 
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

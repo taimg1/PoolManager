@@ -117,7 +117,7 @@ namespace PoolMS.API.Controllers
             return Ok("User was updated");
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] UserLoginDto userLoginDto)
+        public async Task<IActionResult> Login( UserLoginDto userLoginDto)
         {
             var user = await _userRepository.AuthorizeUserAsync(userLoginDto);
             if (user is null)
