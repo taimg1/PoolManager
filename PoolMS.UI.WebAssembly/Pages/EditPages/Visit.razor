@@ -1,0 +1,73 @@
+﻿
+@page "/visits/{Id:int}"
+@inject IService<VisitDto,VisitCreateDto,VisitUpdateDto> VisitService
+@inject NavigationManager NavigationManager
+@inject IMapper _mapper
+
+@if (Id is null)
+{
+    <PageTitle>Add visit</PageTitle>
+}
+else
+{
+    <PageTitle>Edit visit</PageTitle>
+}
+
+<EditForm Model="visit" OnSubmit="HandleSubmit">
+    <div class="row mt-5 ">
+        <div class="col-12 col-md-3 border border-dark rounded shadow-sm  mx-auto ">
+            <div class="form-group">
+                <h2>Visit</h2>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" id="ReservationIdInput" @bind-Value="visit.ReservationId" placeholder="Reservation id" />
+                <label for="ReservationIdInput">Reservation id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" id="UserIdInput" @bind-Value="visit.UserId" placeholder="User id" />
+                <label for="UserIdInput">User id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" id="PoolIdInput" @bind-Value="visit.PoolId" placeholder="Pool id" />
+                <label for="PoolIdInput">Pool id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" id="StayTimeInput" @bind-Value="visit.StayTime" placeholder="StayTime" />
+                <label for="StayTimeInput">Stay time</label>
+            </div>
+            <div class="form-floating mb-3 text-center">
+                <button class="btn btn-primary" type="submit">@buttonName</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    public string buttonName { get; set; }
+    VisitUpdateDto visit = new VisitUpdateDto();
+    protected override void OnInitialized()
+    {
+        buttonName = Id is null ? "Add" : "Edit";
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var result = await VisitService.GetByIdAsync((int)Id);
+            if (result is not null)
+                visit = _mapper.Map<VisitUpdateDto>(visit);
+            else
+                NavigationManager.NavigateTo("/visit");
+        }
+    }
+    async Task HandleSubmit()
+    {
+        if (Id is not null)
+            await VisitService.UpdateAsync(visit);
+        else
+            await VisitService.AddAsync(_mapper.Map<VisitCreateDto>(visit));
+
+            
+    }
+}

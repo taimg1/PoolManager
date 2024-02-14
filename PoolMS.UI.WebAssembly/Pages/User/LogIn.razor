@@ -1,0 +1,37 @@
+﻿@page "/login"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IMapper _mapper
+@inject IJSRuntime JSRuntime
+
+<EditForm Model="user" OnValidSubmit="HandleValidSubmit">
+    <div class="row mt-5">
+        <div class="col-12 col-md-3 text-center border border-dark mx-auto">
+            <h1>Login</h1>
+            <div class="form-floating mb-3">
+                <InputText id="floatingInput" @bind-Value="user.Email" class="form-control" placeholder="name@example.com" />
+                <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputText id="floatingPassword" @bind-Value="user.Password" type="password" class="form-control" placeholder="Password" autocomplete="off" required />
+                <label for="floatingPassword">Password</label>
+            </div>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </div>
+            <div class="mt-2">
+                <a href="Reg.html">Already have not an account</a>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+        UserLoginDto user = new UserLoginDto();
+
+        private async Task HandleValidSubmit()
+        {
+           
+        }
+
+}

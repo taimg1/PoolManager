@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoolMS.Repository.DTO
+namespace PoolMS.Service.DTO
 {
     public class RoleDto
     {

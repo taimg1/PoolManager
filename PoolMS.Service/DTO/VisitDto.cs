@@ -1,6 +1,4 @@
-﻿using PoolMS.Core.Entities;
-
-namespace PoolMS.Service.DTO;
+﻿namespace PoolMS.Service.DTO;
 
 public class VisitDto
 {
@@ -9,13 +7,13 @@ public class VisitDto
     public PoolDto Pool { get; set; }
     public LowUserDto User { get; set; }
     public int StayTime { get; set; }
-    public Reservation? Reservation { get; set; }
+    public ReservationDto? Reservation { get; set; }
 }
 public class LowVisitDto
 {
     public PoolDto Pool { get; set; }
     public int StayTime { get; set; }
-}   
+}
 public class VisitCreateDto
 {
     public int ReservationId { get; set; }

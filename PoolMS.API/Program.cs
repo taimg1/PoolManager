@@ -90,6 +90,12 @@ namespace PoolMS.API
             builder.Services.ConfigureOptions<JwtOptionsSetup>();
             builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+                                                             .AllowAnyHeader()
+                                                             .AllowAnyMethod());
+            });
 
             var app = builder.Build();
 
@@ -101,6 +107,8 @@ namespace PoolMS.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowOrigin");
 
             app.UseAuthMiddleware();
             app.UseGetUserMiddleware();

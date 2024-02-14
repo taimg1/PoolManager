@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using PoolMS.Core.Entities;
-
-namespace PoolMS.Service.DTO;
+﻿namespace PoolMS.Service.DTO;
 
 public class PaymentDto
 {
@@ -14,10 +11,6 @@ public class PaymentCreateDto
 {
     public int UserId { get; set; }
     public int Amount { get; set; }
-}
-public class ImportPaymentDto
-{
-    public IFormFile formFile { get; set; }
 }
 public class PaymentUpdateDto
 {

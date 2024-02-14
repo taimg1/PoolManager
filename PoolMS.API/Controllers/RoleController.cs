@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PoolMS.API.Auth;
 using PoolMS.Core.Entities;
-using PoolMS.Repository.DTO;
+using PoolMS.Service.DTO;
 using PoolMS.Repository.Interface;
 
 namespace PoolMS.API.Controllers

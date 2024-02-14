@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PoolMS.Core.Entities;
-using PoolMS.Repository.DTO;
 using PoolMS.Service.DTO;
 using PoolMS.Service.Interface;
 using PoolMS.Service.JWT;
+using PoolMS.Service.Service;
 using PoolMS.UI.Components;
-using PoolMS.UI.Interfaces;
-using PoolMS.UI.Service;
 using System.Text;
 
 namespace PoolMS.UI
@@ -30,14 +28,11 @@ namespace PoolMS.UI
             builder.Services.AddScoped<IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto>, SubTypeService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IService<RoleDto,RoleCreateDto, RoleUpdateDto>, RoleService>();
-            builder.Services.AddScoped<IService<PaymentDto, PaymentCreateDto, Payment>, PaymentService>();
-
+            builder.Services.AddScoped<IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto>, PaymentService>();
 
 
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            
 
             var app = builder.Build();
 

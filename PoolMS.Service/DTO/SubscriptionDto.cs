@@ -1,6 +1,4 @@
-﻿using PoolMS.Core.Entities;
-
-namespace PoolMS.Service.DTO;
+﻿namespace PoolMS.Service.DTO;
 
 public class SubscriptionDto
 {

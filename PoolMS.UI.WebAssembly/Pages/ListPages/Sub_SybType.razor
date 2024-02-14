@@ -1,0 +1,123 @@
+﻿@page "/sub_sybtype"
+
+@inject IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto> SubTypeService
+@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
+@inject NavigationManager NavigationManager
+
+
+<div class="row mt-5 d-flex justify-content-around">
+    <div class="col-12 col-md-6 shadow-sm mx-5">
+        <div class="form-floating mt-2">
+            <h2>Subscription list</h2>
+        </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="CreatePageSub" type="submit">Create</button>
+        </div>
+        <div class="form-floating mb-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Subscription number</th>
+                        <th>Subtype</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Price</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                    
+                <tbody>
+                    @foreach(var subscription in SubscriptionService.ItemList)
+                    {
+                        <tr>
+                            <td>@subscription.Id</td>
+                            <td>@subscription.SubType.Title</td>
+                            <td>@subscription.StartDate</td>
+                            <td>@subscription.EndDate</td>
+                            <td>@subscription.SubType.Price</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                    @onclick="()=> ShowSubscription(subscription.Id)">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger"
+                                    @onclick="()=> SubscriptionService.DeleteAsync(subscription.Id)">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-12 col-md-4 shadow-sm mx-5">
+        <div class="form-floating mt-2">
+            <h2>Subtype list</h2>
+        </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="CreatePageSubType" type="submit">Create</button>
+        </div>
+        <div class="form-floating mb-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>SubType number</th>
+                        <th>Price</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    @foreach(var subType in SubTypeService.ItemList)
+                    {
+                        <tr>
+                            <td>@subType.Id</td>
+                            <td>@subType.Title</td>
+                            <td>@subType.Price</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                    @onclick="()=> ShowSubType(subType.Id)">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger"
+                                    @onclick="()=> SubTypeService.DeleteAsync(subType.Id)">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SubTypeService.GetAllAsync();
+        await SubscriptionService.GetAllAsync();
+    }
+    public void ShowSubscription(int id)
+    {
+        NavigationManager.NavigateTo($"/subscription/{id}");
+    }
+    public void ShowSubType(int id)
+    {
+        NavigationManager.NavigateTo($"/subtype/{id}");
+    }
+    public void CreatePageSub()
+    {
+        NavigationManager.NavigateTo("/subscription");
+    }
+    public void CreatePageSubType()
+    {
+        NavigationManager.NavigateTo("/subtype");
+    }
+}

@@ -1,7 +1,4 @@
-﻿using PoolMS.Core.Entities;
-using PoolMS.Repository.DTO;
-
-namespace PoolMS.Service.DTO;
+﻿namespace PoolMS.Service.DTO;
 
 public class UserDto
 {
@@ -11,7 +8,7 @@ public class UserDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public LowSubDto Subscription { get; set; }
-    public LowVisitDto Visit { get; set; }    
+    public LowVisitDto Visit { get; set; }
     public RoleDto Role { get; set; }
 }
 public class LowUserDto

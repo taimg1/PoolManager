@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using PoolMS.Repository.DTO;
 using PoolMS.Service.DTO;
 
 namespace PoolMS.UI.Helper
