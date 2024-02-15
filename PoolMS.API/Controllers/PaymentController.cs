@@ -36,7 +36,7 @@ namespace PoolMS.API.Controllers
         }
        
         [HttpGet("list")]
-        //[RoleAuth(Role ="Admin")]
+        [RoleAuth(Role ="Admin")]
         public async Task<IActionResult> GetAllPayments()
         {
             var payments = _mapper.Map<IEnumerable<PaymentDto>>(await _paymentRepository.GetAllAsync());
@@ -44,6 +44,16 @@ namespace PoolMS.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            return Ok(payments);
+        }
+        [HttpGet("info")]
+        public async Task<IActionResult> Getinfo()
+        {
+            var email = _httpContextAccessor.HttpContext.Items["email"].ToString();
+            var user = await _userRepository.GetByEmail(email);
+
+            var rowPayments = await _paymentRepository.GetAllAsync();
+            var payments = _mapper.Map<IEnumerable<PaymentDto>>(rowPayments.Where(x => x.User == user));
             return Ok(payments);
         }
         [HttpPost("admin/add")]

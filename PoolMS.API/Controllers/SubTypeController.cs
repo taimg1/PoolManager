@@ -20,6 +20,7 @@ namespace PoolMS.API.Controllers
             _mapper = mapper;
         }
         [HttpGet("list")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllSubTypes()
         {
             var subTypes = _mapper.Map<IEnumerable<SubTypeDto>>(await _subTypeRepository.GetAllAsync());
@@ -40,7 +41,7 @@ namespace PoolMS.API.Controllers
             return Ok(subTypeDto);
         }
         [HttpPost("add")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> AddSubType([FromForm] SubTypeCreateDto subTypeCreateDto)
         {
             if (subTypeCreateDto.Title == null)

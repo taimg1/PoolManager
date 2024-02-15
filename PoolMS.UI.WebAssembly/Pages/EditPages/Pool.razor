@@ -1,8 +1,10 @@
 ﻿@page "/pool/{Id:int}"
+@attribute [Authorize]
 
 @inject IService<PoolDto, PoolCreateDto, PoolUpdateDto> PoolService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="pool" class="form-group" OnSubmit="HandleSubmit">
 
@@ -39,6 +41,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        await AuthorizeAdmin.CheckUserRole();
         if (Id is not null)
         {
             var result = await PoolService.GetByIdAsync((int)Id);

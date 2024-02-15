@@ -10,5 +10,6 @@ namespace PoolMS.Service.Interface
         Task UpdateAsync(UserUpdateDto entity);
         Task DeleteAsync(int id);
         Task GetAllAsync();
+        Task<UserDto> GetUser();
     }
 }

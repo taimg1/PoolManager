@@ -1,7 +1,10 @@
 ﻿@page "/subtype/create"
+@attribute [Authorize]
+
 @inject IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto> SubTypeService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="subType" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -27,6 +30,10 @@
 
 @code {
     public SubTypeCreateDto subType = new SubTypeCreateDto();
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthorizeAdmin.CheckUserRole();
+    }
     private async Task HandleSubmit()
     {
         await SubTypeService.AddAsync(subType);

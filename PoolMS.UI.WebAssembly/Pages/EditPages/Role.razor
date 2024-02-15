@@ -1,7 +1,10 @@
 ﻿@page "/role/{id:int}"
+@attribute [Authorize]
+
 @inject IService<RoleDto, RoleCreateDto, RoleUpdateDto> RoleService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="role" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -40,6 +43,7 @@
     }
     private async Task HandleSubmit()
     {
+        await AuthorizeAdmin.CheckUserRole();
         if (Id is not null)
         {
             await RoleService.UpdateAsync(role);

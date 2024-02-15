@@ -1,7 +1,10 @@
 ﻿@page "/poolsize/create"
+
+
 @inject IService<PoolSizeDto, PoolSizeCreateDto, PoolSizeUpdateDto> PoolSizeService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="poolSize" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -34,8 +37,12 @@
 
 @code {
     public PoolSizeCreateDto poolSize = new PoolSizeCreateDto();
-    private async Task HandleSubmit()
+    protected override async Task OnInitializedAsync()
     {
+        await AuthorizeAdmin.CheckUserRole();
+    }
+    private async Task HandleSubmit()
+    {      
         await PoolSizeService.AddAsync(poolSize);
         NavigationManager.NavigateTo("/pool_poolsize");
     }

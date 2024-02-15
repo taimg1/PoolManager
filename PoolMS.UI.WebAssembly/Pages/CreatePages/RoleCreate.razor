@@ -1,7 +1,10 @@
 ﻿@page "/role/create"
+@attribute [Authorize]
+
 @inject IService<RoleDto, RoleCreateDto, RoleUpdateDto> RoleService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="role" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -22,6 +25,10 @@
 
 @code {
     public RoleCreateDto role = new RoleCreateDto();
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthorizeAdmin.CheckUserRole();
+    }
     private async Task HandleSubmit()
     {
         await RoleService.AddAsync(role);

@@ -28,7 +28,7 @@ namespace PoolMS.API.Controllers
 
         }
         [HttpGet("list")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = _mapper.Map<IEnumerable<UserDto>>(await _userRepository.GetAllAsync());

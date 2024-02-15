@@ -1,9 +1,11 @@
-﻿@page "/user/account/{id:int}"
+﻿@page "/user/account"
 @inject IUserService UserService
 @inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
 @inject IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto> PaymentService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@attribute [Authorize]
+@inject AuthService AuthService
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-4 shadow-sm mx-5">
         <div class="form-floating mt-2">
@@ -109,17 +111,22 @@
     <div class="col-12 col-md-5 mx-5"></div>
 </div>
 @code {
-    [Parameter]
-    public int? Id { get; set; }
     public UserUpdateDto user = new UserUpdateDto();
     protected override async Task OnInitializedAsync()
     {
-        var userrow = await UserService.GetByIdAsync((int)Id);
+        if(! await AuthService.IsUserAuthenticated())
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+  
+
+        var userrow = await UserService.GetUser();
         if (userrow is not null)
         {
             user = _mapper.Map<UserUpdateDto>(userrow);
-            await SubscriptionService.GetAllAsync();
-            await PaymentService.GetAllAsync();
+            await SubscriptionService.GetByUser();
+            await PaymentService.GetByUser();
         }
         else
         {
@@ -129,10 +136,7 @@
 
     private async Task HandleSubmit()
     {
-        if (Id is not null)
-        {
-            await UserService.UpdateAsync(user);
-        }
+        await UserService.UpdateAsync(user);
         NavigationManager.NavigateTo("/user/account");
     }
     private async Task DeleteAccount(int id)

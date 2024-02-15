@@ -30,7 +30,7 @@ namespace PoolMS.API.Controllers
             _userRepository = userRepository;
         }
         [HttpGet("list")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllVisits()
         {
             var visits = _mapper.Map<IEnumerable<VisitDto>>(await _visitRepository.GetAllAsync());

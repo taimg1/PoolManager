@@ -1,7 +1,10 @@
 ﻿@page "/visit/create"
+@attribute [Authorize]
+
 @inject IService<VisitDto,VisitCreateDto,VisitUpdateDto> VisitService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="visit" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -34,6 +37,10 @@
 @code {
 
     VisitCreateDto visit = new VisitCreateDto();
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthorizeAdmin.CheckUserRole();
+    }
     private async Task HandleSubmit()
     {
         await VisitService.AddAsync(visit);

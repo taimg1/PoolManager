@@ -70,6 +70,25 @@ namespace PoolMS.UI.WebAssembly.Auth
         {
             await _localStorage.RemoveItemAsync("jwt");
         }
+        public async Task<string> GetUserRole()
+        {
+            var token = await _localStorage.GetItemAsync<string>("jwt");
+            if (!string.IsNullOrEmpty(token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role");
+                if (roleClaim != null)
+                {
+                    var roleParts = roleClaim.Value.Split(';');
+                    if (roleParts.Length > 1)
+                    {
+                        return roleParts[1];
+                    }
+                }
+            }
+            return null;
+        }
     }
     public class TokenResponse
     {

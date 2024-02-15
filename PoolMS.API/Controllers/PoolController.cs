@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PoolMS.API.Auth;
 using PoolMS.Core.Entities;
 using PoolMS.Repository;
 using PoolMS.Repository.Interface;
@@ -31,6 +32,7 @@ namespace PoolMS.API.Controllers
             return Ok(pools);
         }
         [HttpPost("add")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> AddPool(PoolCreateDto poolCreateDto)
         {
             var pool = _mapper.Map<Pool>(poolCreateDto);
@@ -50,6 +52,7 @@ namespace PoolMS.API.Controllers
             return Ok($"Pool {pool.Id} added");
         }
         [HttpGet("{id}")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetPool(int id)
         {
             var pool = await _poolRepository.GetByIdAsync(id);
@@ -60,6 +63,7 @@ namespace PoolMS.API.Controllers
             return Ok(poolDto);
         }
         [HttpDelete("delete/{id}")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> DeletePool(int id)
         {
             var pool = await _poolRepository.GetByIdAsync(id);
@@ -74,6 +78,7 @@ namespace PoolMS.API.Controllers
             return Ok($"Pool {pool.Id} deleted");
         }
         [HttpPut("update")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> UpdatePool(PoolUpdateDto poolDto)
         {
          

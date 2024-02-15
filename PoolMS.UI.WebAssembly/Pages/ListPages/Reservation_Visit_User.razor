@@ -2,7 +2,7 @@
 @inject IService<VisitDto,VisitCreateDto,VisitUpdateDto> VisitService
 @inject IService<ReservationDto,ReservationCreateDto,ReservationUpdateDto> ReservationService
 @inject NavigationManager NavigationManager
-@inject AuthorizeAdmin AuthorizeAdmin
+
 
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-5 shadow-sm mx-5">
@@ -23,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var visit in VisitService.ItemList)
+                    @foreach (var visit in VisitService.ItemList)
                     {
                         <tr>
                             <td>@visit.Id</td>
@@ -31,18 +31,6 @@
                             <td>@visit.StayTime</td>
                             <td>@visit.Pool.Id</td>
                             <td>@visit.Reservation?.Id</td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    @onclick="()=> ShowVisit(visit.Id)">
-                                    <i class="oi oi-pencil"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger"
-                                    @onclick="()=> VisitService.DeleteAsync(visit.Id)">
-                                    <i class="oi oi-trash"></i>
-                                </button>
-                            </td>
                         </tr>
                     }
                 </tbody>
@@ -65,21 +53,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach(var reservation in ReservationService.ItemList)
-                        {
-                            <tr>
-                                <td>@reservation.Id</td>
-                                <td>@reservation.Date</td>
-                                <td>@reservation.Pool.Id</td>
-                                <td>@reservation.Subscription.Id</td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                        @onclick="()=> ShowReservation(reservation.Id)">
-                                        <i class="oi oi-pencil"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
+                    @foreach (var reservation in ReservationService.ItemList)
+                    {
+                        <tr>
+                            <td>@reservation.Id</td>
+                            <td>@reservation.Date</td>
+                            <td>@reservation.Pool.Id</td>
+                            <td>@reservation.Subscription.Id</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="()=> ReservationService.DeleteAsync(reservation.Id)">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -89,16 +77,9 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
-        await VisitService.GetAllAsync();
-        await ReservationService.GetAllAsync();
+
+        await VisitService.GetByUser();
+        await ReservationService.GetByUser();
     }
-    public void ShowVisit(int id)
-    {
-        NavigationManager.NavigateTo($"/visit/{id}");
-    }
-    public void ShowReservation(int id)
-    {
-        NavigationManager.NavigateTo($"/reservation/{id}");
-    }
+
 }

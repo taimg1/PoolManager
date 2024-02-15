@@ -3,6 +3,7 @@
 @inject IUserService UserService
 @inject IService<RoleDto, RoleCreateDto, RoleUpdateDto> RoleService
 @inject NavigationManager NavigationManager
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-6 shadow-sm mx-5">
@@ -93,6 +94,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
+        await AuthorizeAdmin.CheckUserRole();
         await UserService.GetAllAsync();
         await RoleService.GetAllAsync();
     }

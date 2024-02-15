@@ -1,7 +1,4 @@
-﻿@page "/subscription/create"
-@attribute [Authorize]
-
-@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
+﻿@inject SubscriptionService SubscriptionService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
 
@@ -12,15 +9,11 @@
                 <h2>Subscription</h2>
             </div>
             <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" @bind-Value="subscription.UserId" id="UserIdInput" placeholder="User id"/>
-                <label for="UserIdInput">User id</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id"/>
+                <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id" />
                 <label for="SubtypeIdInput">Subtype id</label>
             </div>
             <div class="form-floating mb-3">
-                <InputDate TValue="DateTime" class="form-control"@bind-Value="subscription.EndDate" id="DateInput" placeholder="Date"/>
+                <InputDate TValue="DateTime" class="form-control" @bind-Value="subscription.EndDate" id="DateInput" placeholder="Date" />
                 <label for="DateInput">Date end</label>
             </div>
             <div class="form-floating mb-3 text-center">
@@ -31,10 +24,10 @@
 </EditForm>
 
 @code {
-    public SubscriptionCreateDto subscription = new SubscriptionCreateDto();
+    public SubscriptionCreateUserDto subscription = new SubscriptionCreateUserDto();
     private async Task HandleSubmit()
     {
-        await SubscriptionService.AddAsync(subscription);
+        await SubscriptionService.AddByUser(subscription);   
         NavigationManager.NavigateTo("/subscription");
     }
 }

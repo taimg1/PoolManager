@@ -1,7 +1,10 @@
 ﻿@page "/subscription/{id:int}"
+@attribute [Authorize]
+
 @inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
 @inject IMapper _mapper
 @inject NavigationManager NavigationManager
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="subscription" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -33,6 +36,7 @@
     public SubscriptionUpdateDto subscription = new SubscriptionUpdateDto();
     protected override async Task OnParametersSetAsync()
     {
+        await AuthorizeAdmin.CheckUserRole();
         if (Id is not null)
         {
             var result = await SubscriptionService.GetByIdAsync((int)Id);

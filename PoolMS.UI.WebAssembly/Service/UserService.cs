@@ -2,16 +2,19 @@
 using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
+using PoolMS.UI.WebAssembly.Auth;
 
 namespace PoolMS.UI.WebAssembly.Service
 {
     public class UserService : IUserService
     {
         private readonly HttpClient _httpClient;
+        private readonly AuthService _authService;
         public List<UserDto> ItemList { get; set; } = new List<UserDto>();
-        public UserService(HttpClient httpClient)
+        public UserService(HttpClient httpClient, AuthService authService)
         {
             _httpClient = httpClient;
+            _authService = authService;
         }
         public async Task<UserDto> LoginAsync(UserLoginDto userLoginDto)
         {
@@ -37,6 +40,7 @@ namespace PoolMS.UI.WebAssembly.Service
         }
         public async Task UpdateAsync(UserUpdateDto entity)
         {
+            await _authService.SetJwtTokenInHeader();
             await _httpClient.PutAsJsonAsync("api/user/update", entity);
         }
 
@@ -52,6 +56,12 @@ namespace PoolMS.UI.WebAssembly.Service
                 return await result.Content.ReadFromJsonAsync<UserDto>();
             else
                 return null;
+        }
+        public async Task<UserDto> GetUser()
+        {
+            await _authService.SetJwtTokenInHeader();
+            var result = await _httpClient.GetFromJsonAsync<UserDto>("api/user/info");
+            return result;
         }
     }
 }

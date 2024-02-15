@@ -1,4 +1,6 @@
 ﻿@page "/payment"
+@attribute [Authorize]
+
 @inject IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto> PaymentService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper

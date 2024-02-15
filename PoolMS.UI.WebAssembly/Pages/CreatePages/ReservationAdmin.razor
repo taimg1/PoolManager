@@ -4,6 +4,7 @@
 @inject IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto> ReservationService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 
 <EditForm Model="reservation" class="form-group" OnSubmit="HandleSubmit">
@@ -27,15 +28,20 @@
             <div class="form-floating mb-3 text-center">
                 <button class="btn btn-primary" type="submit">Create</button>
             </div>
+            
         </div>
     </div>
 </EditForm>
 
 @code {
     public ReservationCreateDto reservation = new ReservationCreateDto();
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthorizeAdmin.CheckUserRole();
+    }
     private async Task HandleSubmit()
     {
-        await ReservationService.AddAsyncByUser(reservation);
+        await ReservationService.AddAsync(reservation);
         NavigationManager.NavigateTo("/reservation");
     }
 }

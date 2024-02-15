@@ -1,8 +1,10 @@
-﻿
-@page "/visits/{Id:int}"
+﻿@page "/visits/{Id:int}"
+@attribute [Authorize]
+
 @inject IService<VisitDto,VisitCreateDto,VisitUpdateDto> VisitService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 @if (Id is null)
 {
@@ -52,6 +54,7 @@ else
     }
     protected override async Task OnParametersSetAsync()
     {
+        await AuthorizeAdmin.CheckUserRole();
         if (Id is not null)
         {
             var result = await VisitService.GetByIdAsync((int)Id);

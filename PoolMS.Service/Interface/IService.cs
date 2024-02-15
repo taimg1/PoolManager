@@ -8,6 +8,8 @@
         Task AddAsync(TCreateDto entity);
         Task UpdateAsync(TUpdateDto entity);
         Task DeleteAsync(int id);
+        Task GetByUser();
+        Task AddAsyncByUser(TCreateDto entity);
     }
 
 }

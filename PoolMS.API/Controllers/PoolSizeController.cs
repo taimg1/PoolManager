@@ -20,7 +20,7 @@ namespace PoolMS.API.Controllers
             _mapper = mapper;
         }
         [HttpGet("list")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllPoolSizes()
         {
             var poolSizes = _mapper.Map<IEnumerable<PoolSizeDto>>(await _poolSizeRepository.GetAllAsync());

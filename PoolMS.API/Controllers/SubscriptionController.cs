@@ -27,6 +27,7 @@ namespace PoolMS.API.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         [HttpGet("list")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllSubscriptions()
         {
             var subscriptions = _mapper.Map<IEnumerable<SubscriptionDto>>(await _subscriptionRepository.GetAllAsync());
@@ -56,7 +57,7 @@ namespace PoolMS.API.Controllers
             var subscriptionDto = _mapper.Map<SubscriptionDto>(subscription);
             return Ok(subscriptionDto);
         }
-        [HttpPost("add")]
+        [HttpPost("admin/add")]
         [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> AddSubscription(SubscriptionCreateDto subscriptionCreateDto)
         {
@@ -75,7 +76,7 @@ namespace PoolMS.API.Controllers
             await _subscriptionRepository.AddAsync(subscription);
             return Ok("Subscription was added");
         }
-        [HttpPost("add/user")]
+        [HttpPost("add")]
         [Authorize]
         public async Task<IActionResult> AddSubUser(SubscriptionCreateUserDto subscriptionCreateUserDto)
         {
@@ -110,7 +111,7 @@ namespace PoolMS.API.Controllers
             return Ok("Subscription was deleted");
         }
         [HttpPut("update")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> UpdateSubscription(SubscriptionUpdateDto subscriptionUpdateDto)
         {
 

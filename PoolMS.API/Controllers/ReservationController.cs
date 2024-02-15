@@ -31,7 +31,7 @@ namespace PoolMS.API.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         [HttpGet("list")]
-        //[RoleAuth(Role = "Admin")]
+        [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> GetAllReservations()
         {
             var reservations = _mapper.Map<IEnumerable<ReservationDto>>(await _reservationRepository.GetAllAsync());
@@ -52,6 +52,7 @@ namespace PoolMS.API.Controllers
             return Ok(reservations);
         }
         [HttpGet("{id}")]  
+        
         public async Task<IActionResult> GetReservation(int id)
         {
             var reservation = await _reservationRepository.GetByIdAsync(id);

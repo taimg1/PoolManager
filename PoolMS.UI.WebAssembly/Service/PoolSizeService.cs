@@ -25,13 +25,20 @@ namespace PoolMS.UI.WebAssembly.Service
             await _httpClient.PostAsJsonAsync("api/poolsize/add", entity);
         }
 
+        public Task AddAsyncByUser(PoolSizeCreateDto entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(int id)
         {
+            await _authService.SetJwtTokenInHeader();
             await _httpClient.DeleteAsync($"api/poolsize/delete/{id}");
         }
 
         public async Task GetAllAsync()
         {
+            await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetFromJsonAsync<List<PoolSizeDto>>("api/poolsize/list");
             if (result is not null)
                 ItemList = result;
@@ -39,6 +46,7 @@ namespace PoolMS.UI.WebAssembly.Service
 
         public async Task<PoolSizeDto> GetByIdAsync(int id)
         {
+            await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetAsync($"api/poolsize/{id}");
             if (result.StatusCode == HttpStatusCode.OK)
                 return await result.Content.ReadFromJsonAsync<PoolSizeDto>();
@@ -46,8 +54,14 @@ namespace PoolMS.UI.WebAssembly.Service
                 return null;
         }
 
+        public Task GetByUser()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UpdateAsync(PoolSizeUpdateDto entity)
         {
+            await _authService.SetJwtTokenInHeader();
             await _httpClient.PutAsJsonAsync("api/poolsize/update", entity);
         }
     }

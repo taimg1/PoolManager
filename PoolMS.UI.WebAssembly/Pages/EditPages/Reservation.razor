@@ -1,9 +1,10 @@
 ﻿@page "/reservation/{Id}"
-
+@attribute [Authorize]
 
 @inject IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto> ReservationService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 
 <EditForm Model="reservation" class="form-group" OnSubmit="HandleSubmit">
@@ -57,6 +58,7 @@
     }
     private async Task HandleSubmit()
     {
+        await AuthorizeAdmin.CheckUserRole();
         if (Id is not null)
         {
             await ReservationService.UpdateAsync(reservation);

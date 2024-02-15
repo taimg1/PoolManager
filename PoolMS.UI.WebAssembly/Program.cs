@@ -30,7 +30,10 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<AuthorizeAdmin>();
+            builder.Services.AddScoped<SubscriptionService>();  
             builder.Services.AddAuthorizationCore();
+           
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
