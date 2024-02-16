@@ -19,13 +19,11 @@ public class SubscriptionCreateDto
     public int UserId { get; set; }
     public int SubTypeId { get; set; }
 
-    public DateTime EndDate { get; set; }
 }
 public class SubscriptionCreateUserDto
 {
     public int SubTypeId { get; set; }
 
-    public DateTime EndDate { get; set; }
 }
 public class SubscriptionUpdateDto
 {

@@ -42,7 +42,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddRole([FromForm] RoleCreateDto roleCreateDto)
+        public async Task<IActionResult> AddRole(RoleCreateDto roleCreateDto)
         {
             var role = _mapper.Map<Role>(roleCreateDto);
             await _roleRepository.AddAsync(role);
@@ -65,7 +65,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateRole([FromForm] RoleUpdateDto roleUpdateDto)
+        public async Task<IActionResult> UpdateRole(RoleUpdateDto roleUpdateDto)
         {
             if (!await _roleRepository.ExistItem(roleUpdateDto.Id))
                 return BadRequest("Role not found");

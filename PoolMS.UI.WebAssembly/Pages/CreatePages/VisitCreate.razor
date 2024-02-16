@@ -5,16 +5,13 @@
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
 @inject AuthorizeAdmin AuthorizeAdmin
+@inject ILocalStorageService LocalStorage
 
 <EditForm Model="visit" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
         <div class="col-12 col-md-3 border border-dark rounded shadow-sm  mx-auto ">
             <div class="form-group">
                 <h2>Visit</h2>
-            </div>
-            <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" id="ReservationIdInput" @bind-Value="visit.ReservationId" placeholder="Reservation id" />
-                <label for="ReservationIdInput">Reservation id</label>
             </div>
             <div class="form-floating mb-3">
                 <InputNumber TValue="int" class="form-control" id="UserIdInput" @bind-Value="visit.UserId" placeholder="User id" />
@@ -28,22 +25,36 @@
                 <InputNumber TValue="int" class="form-control" id="StayTimeInput" @bind-Value="visit.StayTime" placeholder="StayTime" />
                 <label for="StayTimeInput">Stay time</label>
             </div>
-            <div class="form-floating mb-3 text-center">
-                <button class="btn btn-primary" type="submit">Create</button>
+            <div class="form-floating mb-3">
+                <InputCheckbox class="form-check-input" @bind-Value="CashPayment" id="IsPaidInput" />CashPayment
             </div>
+            <div class="form-floating mb-3 text-center">
+                <button class="btn btn-primary"  type="submit">Create</button>
+            </div>
+         
         </div>
     </div>
 </EditForm>
 @code {
-
     VisitCreateDto visit = new VisitCreateDto();
+    bool CashPayment = false;
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole())
+            return;
     }
     private async Task HandleSubmit()
     {
-        await VisitService.AddAsync(visit);
-        NavigationManager.NavigateTo("/visits-reservations");
+        if(CashPayment)
+        {
+            await VisitService.AddAsync(visit);
+            NavigationManager.NavigateTo("/visits-reservations");
+        }
+        else
+        {
+            await LocalStorage.SetItemAsync("visit", visit);
+            NavigationManager.NavigateTo("/payment/create-visit");
+        }
+       
     }
 }

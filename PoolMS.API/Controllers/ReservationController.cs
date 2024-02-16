@@ -22,13 +22,14 @@ namespace PoolMS.API.Controllers
 
         public ReservationController(IRepository<Reservation> reservationRepository, IMapper mapper ,
             IRepository<Pool> poolRepository, IRepository<Subscription> subscriptionRepository, 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, UserRepository userRepository)
         {
             _reservationRepository = reservationRepository;
             _mapper = mapper;
             _poolRepository = poolRepository;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
+            _userRepository = userRepository;
         }
         [HttpGet("list")]
         [RoleAuth(Role = "Admin")]
@@ -64,19 +65,16 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("admin/add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddReservationAdmin([FromForm] ReservationCreateDto reservationCreateDto)
+        public async Task<IActionResult> AddReservationAdmin(ReservationCreateDto reservationCreateDto)
         {
 
             var reservation = _mapper.Map<Reservation>(reservationCreateDto);
-            var pool = await _poolRepository.GetByIdAsync(reservationCreateDto.PoolId);
             var subscription = await _subscriptionRepository.GetByIdAsync(reservationCreateDto.SubscriptionId);
             
-            if(pool is null)
-                return BadRequest("Pool not found");
             if(subscription is null)
                 return BadRequest("Subscription not found");
 
-            reservation.Pool = pool;
+      
             reservation.Subscription = subscription;
             await _reservationRepository.AddAsync(reservation);
 
@@ -87,24 +85,22 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("add")]
         [Authorize]
-        public async Task<IActionResult> AddReservation([FromForm] ReservationCreateDto reservationCreateDto)
+        public async Task<IActionResult> AddReservation(ReservationCreateDto reservationCreateDto)
         {
             var email = _httpContextAccessor.HttpContext.Items["email"].ToString();
             var user = await _userRepository.GetByEmail(email);
 
             var reservation = _mapper.Map<Reservation>(reservationCreateDto);
-            var pool = await _poolRepository.GetByIdAsync(reservationCreateDto.PoolId);
             var subscription = await _subscriptionRepository.GetByIdAsync(reservationCreateDto.SubscriptionId);
 
             if(subscription.User != user)
                 return BadRequest("Subscription not found");
 
-            if (pool is null)
-                return BadRequest("Pool not found");
+
             if (subscription is null)
                 return BadRequest("Subscription not found");
 
-            reservation.Pool = pool;
+ 
             reservation.Subscription = subscription;
             await _reservationRepository.AddAsync(reservation);
 
@@ -116,7 +112,7 @@ namespace PoolMS.API.Controllers
         
         [HttpDelete("admin/delete/{id}")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> DeleteReservation([FromForm] int id)
+        public async Task<IActionResult> DeleteReservation(int id)
         {
             var reservation = await _reservationRepository.GetByIdAsync(id);
             if (reservation is null)
@@ -147,21 +143,19 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("admin/update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateReservation([FromForm] ReservationUpdateDto reservationUpdateDto)
+        public async Task<IActionResult> UpdateReservation( ReservationUpdateDto reservationUpdateDto)
         {
 
             var reservation = _mapper.Map<Reservation>(reservationUpdateDto);
             if (!await _reservationRepository.ExistItem(reservation.Id))
                 return BadRequest("Reservation not found");
             
-            var pool = await _poolRepository.GetByIdAsync(reservationUpdateDto.PoolId);
             var subscription = await _subscriptionRepository.GetByIdAsync(reservationUpdateDto.SubscriptionId);
-            if (pool is null)
-                return BadRequest("Pool not found");
+
             if (subscription is null)
                 return BadRequest("Subscription not found");
 
-            reservation.Pool = pool;    
+  
             reservation.Subscription = subscription;
             await _reservationRepository.UpdateAsync(reservation);
 
@@ -172,7 +166,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("update")]
         [Authorize]
-        public async Task<IActionResult> UpdateReservationUser([FromForm] ReservationUpdateDto reservationUpdateDto)
+        public async Task<IActionResult> UpdateReservationUser(ReservationUpdateDto reservationUpdateDto)
         {
             var email = _httpContextAccessor.HttpContext.Items["email"].ToString();
             var user = await _userRepository.GetByEmail(email);
@@ -181,18 +175,15 @@ namespace PoolMS.API.Controllers
             if (!await _reservationRepository.ExistItem(reservation.Id))
                 return BadRequest("Reservation not found");
             
-            var pool = await _poolRepository.GetByIdAsync(reservationUpdateDto.PoolId);
             var subscription = await _subscriptionRepository.GetByIdAsync(reservationUpdateDto.SubscriptionId);
 
-            if (pool is null)
-                return BadRequest("Pool not found");
+
             if (subscription is null)
                 return BadRequest("Subscription not found");
 
             if (subscription.User != user)
                 return BadRequest("Subscription not found");
-
-            reservation.Pool = pool;    
+   
             reservation.Subscription = subscription;
             await _reservationRepository.UpdateAsync(reservation);
 

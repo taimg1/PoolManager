@@ -1,7 +1,7 @@
 ﻿@page "/user/account"
 @inject IUserService UserService
-@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
-@inject IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto> PaymentService
+@inject ISubscriptionService SubscriptionService
+@inject IPaymentService PaymentService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
 @attribute [Authorize]

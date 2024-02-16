@@ -14,7 +14,7 @@ namespace PoolMS.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public virtual User User { get; set; }
-        public int Amount { get; set; }
+        public double Amount { get; set; }
         public DateTime PaymentDay { get; set; }
         public override string ToString()
         {

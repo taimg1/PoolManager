@@ -1,4 +1,4 @@
-﻿@page "/visits-reservations"
+﻿@page "/admin/visits-reservations"
 @inject IService<VisitDto,VisitCreateDto,VisitUpdateDto> VisitService
 @inject IService<ReservationDto,ReservationCreateDto,ReservationUpdateDto> ReservationService
 @inject NavigationManager NavigationManager
@@ -17,7 +17,7 @@
                         <th>Date</th>
                         <th>Stay time</th>
                         <th>Pool number</th>
-                        <th>Reservation number</th>
+
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -30,7 +30,7 @@
                             <td>@visit.Date</td>
                             <td>@visit.StayTime</td>
                             <td>@visit.Pool.Id</td>
-                            <td>@visit.Reservation?.Id</td>
+
                             <td>
                                 <button class="btn btn-primary"
                                     @onclick="()=> ShowVisit(visit.Id)">
@@ -59,7 +59,7 @@
                     <tr>
                         <th>Reservation number</th>
                         <th>Date</th>
-                        <th>Pool number</th>
+
                         <th>Subscription number</th>
                         <th>Edit</th>
                     </tr>
@@ -70,7 +70,6 @@
                             <tr>
                                 <td>@reservation.Id</td>
                                 <td>@reservation.Date</td>
-                                <td>@reservation.Pool.Id</td>
                                 <td>@reservation.Subscription.Id</td>
                                 <td>
                                     <button class="btn btn-primary"
@@ -89,7 +88,9 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole())
+            return;
+
         await VisitService.GetAllAsync();
         await ReservationService.GetAllAsync();
     }

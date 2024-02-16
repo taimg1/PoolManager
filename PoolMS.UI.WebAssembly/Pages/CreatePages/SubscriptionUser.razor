@@ -1,6 +1,10 @@
-﻿@inject SubscriptionService SubscriptionService
+﻿@page "/subscription/create"
+
+@inject SubscriptionService SubscriptionService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject ILocalStorageService LocalStorage
+@inject AuthService AuthService
 
 <EditForm Model="subscription" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -12,10 +16,6 @@
                 <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id" />
                 <label for="SubtypeIdInput">Subtype id</label>
             </div>
-            <div class="form-floating mb-3">
-                <InputDate TValue="DateTime" class="form-control" @bind-Value="subscription.EndDate" id="DateInput" placeholder="Date" />
-                <label for="DateInput">Date end</label>
-            </div>
             <div class="form-floating mb-3 text-center">
                 <button class="btn btn-primary" type="submit">Create</button>
             </div>
@@ -25,9 +25,17 @@
 
 @code {
     public SubscriptionCreateUserDto subscription = new SubscriptionCreateUserDto();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsUserAuthenticated())
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+    }
     private async Task HandleSubmit()
     {
-        await SubscriptionService.AddByUser(subscription);   
-        NavigationManager.NavigateTo("/subscription");
+        await LocalStorage.SetItemAsync("subscription", subscription);
+        NavigationManager.NavigateTo("/payment");
     }
 }

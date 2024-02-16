@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolMS.Core;
 
@@ -11,9 +12,11 @@ using PoolMS.Core;
 namespace PoolMS.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240216095840_reservation-changed")]
+    partial class reservationchanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,6 +244,9 @@ namespace PoolMS.Core.Migrations
                     b.Property<int>("PoolId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StayTime")
                         .HasColumnType("int");
 
@@ -250,6 +256,8 @@ namespace PoolMS.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PoolId");
+
+                    b.HasIndex("ReservationId");
 
                     b.HasIndex("UserId");
 
@@ -327,6 +335,10 @@ namespace PoolMS.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PoolMS.Core.Entities.Reservation", "Reservation")
+                        .WithMany("Visits")
+                        .HasForeignKey("ReservationId");
+
                     b.HasOne("PoolMS.Core.Entities.User", "User")
                         .WithMany("Visits")
                         .HasForeignKey("UserId")
@@ -334,6 +346,8 @@ namespace PoolMS.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Pool");
+
+                    b.Navigation("Reservation");
 
                     b.Navigation("User");
                 });
@@ -346,6 +360,11 @@ namespace PoolMS.Core.Migrations
             modelBuilder.Entity("PoolMS.Core.Entities.PoolSize", b =>
                 {
                     b.Navigation("Pools");
+                });
+
+            modelBuilder.Entity("PoolMS.Core.Entities.Reservation", b =>
+                {
+                    b.Navigation("Visits");
                 });
 
             modelBuilder.Entity("PoolMS.Core.Entities.Role", b =>

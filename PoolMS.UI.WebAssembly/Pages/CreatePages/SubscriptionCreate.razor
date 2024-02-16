@@ -1,9 +1,10 @@
-﻿@page "/subscription/create"
+﻿@page "/subscription/admin/create"
 @attribute [Authorize]
 
 @inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject AuthorizeAdmin AuthorizeAdmin
 
 <EditForm Model="subscription" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -18,11 +19,7 @@
             <div class="form-floating mb-3">
                 <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id"/>
                 <label for="SubtypeIdInput">Subtype id</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputDate TValue="DateTime" class="form-control"@bind-Value="subscription.EndDate" id="DateInput" placeholder="Date"/>
-                <label for="DateInput">Date end</label>
-            </div>
+            </div>>
             <div class="form-floating mb-3 text-center">
                 <button class="btn btn-primary" type="submit">Create</button>
             </div>
@@ -32,6 +29,11 @@
 
 @code {
     public SubscriptionCreateDto subscription = new SubscriptionCreateDto();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+        return;
+    }
     private async Task HandleSubmit()
     {
         await SubscriptionService.AddAsync(subscription);

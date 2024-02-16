@@ -64,7 +64,7 @@ namespace PoolMS.API.Controllers
 
         [HttpPost("add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddVisit([FromForm] VisitCreateDto visitCreateDto)
+        public async Task<IActionResult> AddVisit(VisitCreateDto visitCreateDto)
         {
             var visit = _mapper.Map<Visit>(visitCreateDto);
 
@@ -73,22 +73,18 @@ namespace PoolMS.API.Controllers
                 return BadRequest("Pool not found");
 
             visit.Pool = pool;
-            if (visitCreateDto.ReservationId == null)
-            {
 
-                await _visitRepository.AddAsync(visit);
-                return Ok("Visit was added");
-            }
-            else
-            {
-                var reservation = await _reservationRepository.GetByIdAsync(visitCreateDto.ReservationId);
-                if (reservation is null)
-                    return BadRequest("Reservation not found");
+            var user = await _userRepository.GetByIdAsync(visitCreateDto.UserId);
+            if (user is null)
+                return BadRequest("User not found");
 
-                visit.Reservation = reservation;
-                await _visitRepository.AddAsync(visit);
-                return Ok("Visit was added");
-            }
+            visit.User = user;
+            visit.Date = DateTime.UtcNow;
+            
+            await _visitRepository.AddAsync(visit);
+            return Ok("Visit was added");
+            
+
         }
 
         [HttpDelete("delete/{id}")]
@@ -105,7 +101,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateVisit([FromForm] VisitUpdateDto visitUpdateDto)
+        public async Task<IActionResult> UpdateVisit(VisitUpdateDto visitUpdateDto)
         {
 
             var visit = _mapper.Map<Visit>(visitUpdateDto);
@@ -118,21 +114,10 @@ namespace PoolMS.API.Controllers
                 return BadRequest("Pool not found");
 
             visit.Pool = pool;
-            if (visitUpdateDto.ReservationId == null)
-            {
-                await _visitRepository.UpdateAsync(visit);
-                return Ok("Visit was updated");
-            }
-            else
-            {
-                var reservation = await _reservationRepository.GetByIdAsync(visitUpdateDto.ReservationId);
-                if (reservation is null)
-                    return BadRequest("Reservation not found");
-
-                visit.Reservation = reservation;
-                await _visitRepository.UpdateAsync(visit);
-                return Ok("Visit was updated");
-            }
+ 
+            await _visitRepository.UpdateAsync(visit);
+            return Ok("Visit was updated");
+            
         }
 
     }    

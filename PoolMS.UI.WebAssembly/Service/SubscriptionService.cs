@@ -3,9 +3,10 @@ using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
 using PoolMS.UI.WebAssembly.Auth;
+using ServiceStack.Text;
 namespace PoolMS.UI.WebAssembly.Service
 {
-    public class SubscriptionService : IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto>
+    public class SubscriptionService : ISubscriptionService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthService _authService;
@@ -23,18 +24,13 @@ namespace PoolMS.UI.WebAssembly.Service
             await _httpClient.PostAsJsonAsync("api/subscription/user/add", entity);
         }
 
-        public Task AddAsyncByUser(SubscriptionCreateDto entity)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task AddByUser(SubscriptionCreateUserDto entity)
         {
+            Console.WriteLine(JsonContent.Create(entity));
             await _authService.SetJwtTokenInHeader();
             await _httpClient.PostAsJsonAsync("api/subscription/add", entity);
-
         }
-
         public async Task DeleteAsync(int id)
         {
             await _authService.SetJwtTokenInHeader();

@@ -1,7 +1,7 @@
 ﻿@page "/sub_sybtype"
 
 @inject IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto> SubTypeService
-@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
+@inject ISubscriptionService SubscriptionService
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
 
@@ -101,7 +101,8 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         await SubTypeService.GetAllAsync();
         await SubscriptionService.GetAllAsync();
     }

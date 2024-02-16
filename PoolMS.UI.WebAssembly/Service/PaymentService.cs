@@ -6,7 +6,7 @@ using PoolMS.UI.WebAssembly.Auth;
 
 namespace PoolMS.UI.WebAssembly.Service
 {
-    public class PaymentService : IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto>
+    public class PaymentService : IPaymentService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthService _authService;
@@ -19,9 +19,11 @@ namespace PoolMS.UI.WebAssembly.Service
 
         public List<PaymentDto> ItemList { get; set; } = new List<PaymentDto>();
 
-        public async Task AddAsync(PaymentCreateDto entity)
+        public async Task<bool> AddAsync(PaymentCreateDto entity)
         {
-            await _httpClient.PostAsJsonAsync("api/payment/pay", entity);
+            await _authService.SetJwtTokenInHeader();
+            var result = await _httpClient.PostAsJsonAsync("api/payment/pay", entity);
+            return result.IsSuccessStatusCode;
         }
 
         public async Task DeleteAsync(int id)
@@ -52,14 +54,14 @@ namespace PoolMS.UI.WebAssembly.Service
             return await _httpClient.GetFromJsonAsync<PaymentDto>($"api/payment/{id}");
         }
 
-        public Task UpdateAsync(PaymentUpdateDto entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task AddAsyncByUser(PaymentCreateDto entity)
+        public async Task<bool> AddAsyncByUser(PaymentCreateUserDto amout)
         {
-            throw new NotImplementedException();
+            await _authService.SetJwtTokenInHeader();
+            Console.WriteLine(amout.Amount);
+            var result = await _httpClient.PostAsJsonAsync("api/payment/pay", amout);
+            return result.IsSuccessStatusCode;
         }
+     
     }
 }

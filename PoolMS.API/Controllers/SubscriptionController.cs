@@ -44,7 +44,7 @@ namespace PoolMS.API.Controllers
             var user = await _userRepository.GetByEmail(email);
             
             var rowSubscriptions = await _subscriptionRepository.GetAllAsync();
-            var subscriptions = _mapper.Map<IEnumerable<SubscriptionDto>>(rowSubscriptions.Where(x=> x.User == user));
+            var subscriptions = _mapper.Map<IEnumerable<SubscriptionDto>>(rowSubscriptions.Where(x=> x.User.Id == user.Id));
             return Ok(subscriptions);
         }
         [HttpGet("{id}")]
@@ -88,6 +88,7 @@ namespace PoolMS.API.Controllers
             if(subType is null)
                 return BadRequest("SubType not found");
 
+            subscription.EndDate = DateTime.UtcNow.AddDays(subType.Days);
             subscription.StartDate = DateTime.UtcNow;
             if(subscription.StartDate >= subscription.EndDate)
                 return BadRequest("Start date must be less than end date");
@@ -114,8 +115,6 @@ namespace PoolMS.API.Controllers
         [RoleAuth(Role = "Admin")]
         public async Task<IActionResult> UpdateSubscription(SubscriptionUpdateDto subscriptionUpdateDto)
         {
-
-
             var subscription = _mapper.Map<Subscription>(subscriptionUpdateDto);
             if (!await _subscriptionRepository.ExistItem(subscription.Id))
                 return BadRequest("Subscription not found");

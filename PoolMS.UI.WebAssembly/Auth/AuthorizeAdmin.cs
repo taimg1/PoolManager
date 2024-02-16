@@ -13,20 +13,21 @@ namespace PoolMS.UI.WebAssembly.Auth
             _navigationManager = navigationManager;
         }
 
-        public async Task CheckUserRole()
+        public async Task<bool> CheckUserRole()
         {
             var userRole = await _authService.GetUserRole();
             if (userRole == null)
             {
                 _navigationManager.NavigateTo("/login");
-                return;
+                return false;
             }
             else if (userRole != "Admin")
             {
                 _navigationManager.NavigateTo("/forbidden");
-                return;
+                return false;
             }
 
+            return true;
         }
     }
 }

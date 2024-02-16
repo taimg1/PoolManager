@@ -17,9 +17,6 @@
                         <th>Date</th>
                         <th>Stay time</th>
                         <th>Pool number</th>
-                        <th>Reservation number</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +27,6 @@
                             <td>@visit.Date</td>
                             <td>@visit.StayTime</td>
                             <td>@visit.Pool.Id</td>
-                            <td>@visit.Reservation?.Id</td>
                         </tr>
                     }
                 </tbody>
@@ -41,15 +37,17 @@
         <div class="form-floating mt-2">
             <h2>Reservation list</h2>
         </div>
+        <div class="form-floating mt-2">
+            <button class="btn btn-primary" @onclick="()=> CreatePageReservation()">Create</button>
+        </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Reservation number</th>
                         <th>Date</th>
-                        <th>Pool number</th>
                         <th>Subscription number</th>
-                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,7 +56,7 @@
                         <tr>
                             <td>@reservation.Id</td>
                             <td>@reservation.Date</td>
-                            <td>@reservation.Pool.Id</td>
+
                             <td>@reservation.Subscription.Id</td>
                             <td>
                                 <button class="btn btn-primary"
@@ -77,9 +75,12 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-
         await VisitService.GetByUser();
         await ReservationService.GetByUser();
+    }
+    private void CreatePageReservation()
+    {
+        NavigationManager.NavigateTo("/reservation");
     }
 
 }

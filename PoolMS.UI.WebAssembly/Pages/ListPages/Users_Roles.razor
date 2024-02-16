@@ -94,7 +94,8 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         await UserService.GetAllAsync();
         await RoleService.GetAllAsync();
     }

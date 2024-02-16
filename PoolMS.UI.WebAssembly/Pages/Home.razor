@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject AuthService _authService
+@inject FasService FasService
 
 <PageTitle>Home</PageTitle>
 
@@ -12,9 +13,11 @@
         window.location.href = "/visits/" + id;
     }
 </script>
+
 <div class="row mt-5 justify-content-between">
     <div class="col-12 col-md-6 shadow-sm mx-5">
         <h2>Pool list</h2>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -62,9 +65,12 @@
 </div>
 
 @code {
+    
     protected override async Task OnInitializedAsync()
     {
         await _authService.CheckAndRemoveExpiredToken();
         await PoolService.GetAllAsync();
     }
+
+   
 }

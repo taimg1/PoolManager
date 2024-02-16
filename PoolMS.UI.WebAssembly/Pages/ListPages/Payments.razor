@@ -1,6 +1,6 @@
 ﻿@page "/payments"
 
-@inject IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto> PaymentService
+@inject IPaymentService PaymentService
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
 
@@ -42,6 +42,8 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         await AuthorizeAdmin.CheckUserRole();
         await PaymentService.GetAllAsync();
     }

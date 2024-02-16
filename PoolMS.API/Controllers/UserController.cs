@@ -56,7 +56,7 @@ namespace PoolMS.API.Controllers
             return Ok(userDto);
         }
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromForm] UserRegDto userRegDto)
+        public async Task<IActionResult> RegisterUser(UserRegDto userRegDto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);  
@@ -88,7 +88,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("admin/update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateUserAdmin([FromForm] UserUpdateDto userUpdateDto)
+        public async Task<IActionResult> UpdateUserAdmin( UserUpdateDto userUpdateDto)
         {
             if (!await _userRepository.ExistItem(userUpdateDto.Id))
                 return BadRequest("User not found");
@@ -100,7 +100,7 @@ namespace PoolMS.API.Controllers
             return Ok("User was updated");
         }
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userUpdateDto)
+        public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
         {
             var email = _httpContextAccessor.HttpContext.Items["email"].ToString();
             var user = await _userRepository.GetByEmail(email);
@@ -129,7 +129,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("admin/role")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateRole([FromForm] int userid, int roleid)
+        public async Task<IActionResult> UpdateRole(int userid, int roleid)
         {
            if (!await _userRepository.ExistItem(userid))
                 return BadRequest("User not found");

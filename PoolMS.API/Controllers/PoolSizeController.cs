@@ -75,7 +75,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdatePoolSize([FromForm] PoolSizeUpdateDto poolSizeUpdateDto)
+        public async Task<IActionResult> UpdatePoolSize(PoolSizeUpdateDto poolSizeUpdateDto)
         {
       
 

@@ -41,6 +41,8 @@
     public PoolSizeUpdateDto poolSize = new PoolSizeUpdateDto();    
     protected override async Task OnParametersSetAsync()
     {
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         if (Id is not null)
         {
             var result = await PoolSizeService.GetByIdAsync((int)Id);

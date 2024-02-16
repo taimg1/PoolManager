@@ -36,7 +36,8 @@
     public SubscriptionUpdateDto subscription = new SubscriptionUpdateDto();
     protected override async Task OnParametersSetAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         if (Id is not null)
         {
             var result = await SubscriptionService.GetByIdAsync((int)Id);

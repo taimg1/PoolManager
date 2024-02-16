@@ -28,6 +28,8 @@
     public RoleUpdateDto role = new RoleUpdateDto();
     protected override async Task OnParametersSetAsync()
     {
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         if (Id is not null)
         {
             var result = await RoleService.GetByIdAsync((int)Id);

@@ -15,11 +15,9 @@ namespace PoolMS.Core.Entities
         public int Id { get; set; }
         public virtual Subscription Subscription { get; set; }
         public DateTime Date { get; set; }
-        public virtual Pool Pool { get; set; }
-        public virtual ICollection<Visit> Visits { get; set; }
         public override string ToString()
         {
-            return $"{Id};{Subscription.Id};{Date};{Pool.Id}";
+            return $"{Id};{Subscription.Id};{Date}";
         }
     }
 }

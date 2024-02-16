@@ -1,10 +1,12 @@
 ﻿@page "/payment"
 @attribute [Authorize]
 
-@inject IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto> PaymentService
+@inject IPaymentService PaymentService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
-
+@inject ILocalStorageService LocalStorage
+@inject IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto> SubTypeService 
+@inject ISubscriptionService SubscriptionService
 
 <section class="gradient-custom">
     <div class="container my-5 py-5">
@@ -45,7 +47,7 @@
                                            placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
                                     <label class="form-label" for="typeText2">Cvv</label>
                                 </div>
-                                <button type="button" class="btn btn-info btn-lg btn-rounded">
+                                <button type="button" class="btn btn-info btn-lg btn-rounded" @onclick="()=> HandleSubmit()">
                                     <i class="fas fa-arrow-right">Pay</i>
                                 </button>
                             </div>
@@ -59,5 +61,40 @@
 
 
 @code {
+    private SubscriptionCreateUserDto subscription = new SubscriptionCreateUserDto();
+    private SubTypeDto subTypeDto = new SubTypeDto();
 
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        subscription = await LocalStorage.GetItemAsync<SubscriptionCreateUserDto>("subscription");
+        subTypeDto = await SubTypeService.GetByIdAsync(subscription.SubTypeId);
+        if(subscription is null)
+        {
+            NavigationManager.NavigateTo("/subscription/create");
+            return;
+        }
+       
+    }
+
+    private async Task HandleSubmit()
+    {
+        double amount = subTypeDto.Price;
+        PaymentCreateUserDto payment = new PaymentCreateUserDto
+        {
+            Amount = amount
+        };
+        var result = await PaymentService.AddAsyncByUser(payment);
+       
+        if (!result)
+        {
+            NavigationManager.NavigateTo("/paymenterror");
+            await LocalStorage.RemoveItemAsync("subscription");
+            return;
+        }
+        await SubscriptionService.AddByUser(subscription);
+        NavigationManager.NavigateTo("/paymentsuccesfull");
+        await LocalStorage.RemoveItemAsync("subscription");
+    }
 }

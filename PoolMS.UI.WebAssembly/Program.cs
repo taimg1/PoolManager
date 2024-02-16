@@ -21,17 +21,19 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<IService<PoolDto, PoolCreateDto, PoolUpdateDto>, PoolService>();
             builder.Services.AddScoped<IService<PoolSizeDto, PoolSizeCreateDto, PoolSizeUpdateDto>, PoolSizeService>();
             builder.Services.AddScoped<IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto>, ReservationService>();
-            builder.Services.AddScoped<IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto>, SubscriptionService>();
+            builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+
             builder.Services.AddScoped<IService<VisitDto, VisitCreateDto, VisitUpdateDto>, VisitService>();
             builder.Services.AddScoped<IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto>, SubTypeService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IService<RoleDto, RoleCreateDto, RoleUpdateDto>, RoleService>();
-            builder.Services.AddScoped<IService<PaymentDto, PaymentCreateDto, PaymentUpdateDto>, PaymentService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthorizeAdmin>();
             builder.Services.AddScoped<SubscriptionService>();  
+            builder.Services.AddScoped<FasService>();
             builder.Services.AddAuthorizationCore();
            
 

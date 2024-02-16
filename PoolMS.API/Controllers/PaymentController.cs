@@ -58,7 +58,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("admin/add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddPaymentAdmin([FromForm] PaymentCreateDto paymentCreateDto)
+        public async Task<IActionResult> AddPaymentAdmin(PaymentCreateDto paymentCreateDto)
         {
             var payment = _mapper.Map<Payment>(paymentCreateDto);
             if(!await _paymentRepository.ExistItem(payment.Id))
@@ -79,11 +79,11 @@ namespace PoolMS.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok($"Payment {payment.Id} succesfull");
+            return Ok(true);
         }
         [HttpPost("pay")]
         [Authorize]
-        public async Task<IActionResult> AddPayment([FromForm] int Amout)
+        public async Task<IActionResult> AddPayment(PaymentCreateUserDto paymentCreateUserDto)
         {
             var email = _httpContextAccessor.HttpContext.Items["email"].ToString();
             var user = await _userRepository.GetByEmail(email);
@@ -93,7 +93,7 @@ namespace PoolMS.API.Controllers
             var payment = new Payment
             {
                 User = user,
-                Amount = Amout,
+                Amount = paymentCreateUserDto.Amount,
                 PaymentDay = DateTime.UtcNow
             };
 
@@ -102,7 +102,7 @@ namespace PoolMS.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok($"Payment {payment.Id} succesfull");
+            return Ok(true);
 
         }
         [HttpDelete("delete/{id}")]

@@ -34,7 +34,8 @@
     public SubTypeUpdateDto subType = new SubTypeUpdateDto();
     protected override async Task OnParametersSetAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
         if (Id is not null)
         {
             var result = await SubTypeService.GetByIdAsync((int)Id);

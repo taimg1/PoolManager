@@ -14,7 +14,7 @@ namespace PoolMS.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Title { get; set; }
-  
+        public int Days { get; set; }
         public int Price { get; set; }
         public virtual ICollection<Subscription> Subscriptions { get; set; }
         public override string ToString()

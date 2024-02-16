@@ -106,7 +106,9 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole())
+            return;
+      
         await PoolService.GetAllAsync();
         await PoolSizeService.GetAllAsync();
     }

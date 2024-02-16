@@ -35,7 +35,8 @@
     PoolCreateDto pool = new PoolCreateDto();
     protected override async Task OnInitializedAsync()
     {
-        await AuthorizeAdmin.CheckUserRole();
+        if (!await AuthorizeAdmin.CheckUserRole()) 
+            return;
     }
     private async Task HandleSubmit()
     {

@@ -11,13 +11,10 @@ namespace PoolMS.API.Controllers
     public class FASController : ControllerBase
     {
         private readonly IRepository<Pool> _poolRepository;
-        private readonly IRepository<PoolSize> _poolSizeRepository;
-        private readonly IMapper _mapper;
-        public FASController(IRepository<Pool> poolRepository, IRepository<PoolSize> poolSizeRepository, IMapper mapper)
+
+        public FASController(IRepository<Pool> poolRepository)
         {
             _poolRepository = poolRepository;
-            _poolSizeRepository = poolSizeRepository;
-            _mapper = mapper;
         }
         [HttpGet("popular")]
         public async Task<IActionResult> GetPopular()

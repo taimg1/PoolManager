@@ -42,7 +42,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPost("add")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> AddSubType([FromForm] SubTypeCreateDto subTypeCreateDto)
+        public async Task<IActionResult> AddSubType(SubTypeCreateDto subTypeCreateDto)
         {
             if (subTypeCreateDto.Title == null)
                 return BadRequest("Title cannot be null");
@@ -73,7 +73,7 @@ namespace PoolMS.API.Controllers
         }
         [HttpPut("update")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> UpdateSubType([FromForm] SubTypeUpdateDto subTypeUpdateDto)
+        public async Task<IActionResult> UpdateSubType(SubTypeUpdateDto subTypeUpdateDto)
         {
 
             var subType = _mapper.Map<SubType>(subTypeUpdateDto);
