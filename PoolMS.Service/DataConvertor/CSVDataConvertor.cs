@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PoolMS.Service.DataConvertor
 {
-    public class CSVDataConvertor<T>: IDataConvertor<T> where T : class
+    public class CSVDataConvertor<T>
     {
         public string Filter => "CSV files (*.csv)|*.csv";
 

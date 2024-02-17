@@ -1,10 +1,11 @@
 ﻿@page "/subscription/admin/create"
 @attribute [Authorize]
 
-@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
+@inject SubscriptionService SubscriptionService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
 @inject AuthorizeAdmin AuthorizeAdmin
+@inject IService<SubTypeDto,SubTypeCreateDto,SubTypeUpdateDto> SubTypeService
 
 <EditForm Model="subscription" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -17,9 +18,14 @@
                 <label for="UserIdInput">User id</label>
             </div>
             <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id"/>
-                <label for="SubtypeIdInput">Subtype id</label>
-            </div>>
+                <InputSelect TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput">
+                    @foreach (var subType in subTypes)
+                    {
+                        <option value="@subType.Id">@subType.Title</option>
+                    }
+                </InputSelect>
+                <label for="SubtypeIdInput">Subtype</label>
+            </div>
             <div class="form-floating mb-3 text-center">
                 <button class="btn btn-primary" type="submit">Create</button>
             </div>
@@ -29,10 +35,16 @@
 
 @code {
     public SubscriptionCreateDto subscription = new SubscriptionCreateDto();
+    public IEnumerable<SubTypeDto> subTypes = new List<SubTypeDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole()) 
         return;
+        if (!await AuthorizeAdmin.CheckUserRole())
+            return;
+
+        await SubTypeService.GetAllAsync();
+        subTypes = SubTypeService.ItemList;
     }
     private async Task HandleSubmit()
     {

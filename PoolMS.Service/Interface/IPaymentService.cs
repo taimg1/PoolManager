@@ -16,5 +16,6 @@ namespace PoolMS.Service.Interface
         Task DeleteAsync(int id);
         Task GetByUser();
         Task<bool> AddAsyncByUser(PaymentCreateUserDto amout);
+
     }
 }

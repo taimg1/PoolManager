@@ -5,6 +5,7 @@
 @inject IMapper _mapper
 @inject ILocalStorageService LocalStorage
 @inject AuthService AuthService
+@inject IService<SubTypeDto, SubTypeCreateDto, SubTypeUpdateDto> SubTypeService
 
 <EditForm Model="subscription" class="form-group" OnSubmit="HandleSubmit">
     <div class="row mt-5 ">
@@ -13,8 +14,13 @@
                 <h2>Subscription</h2>
             </div>
             <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput" placeholder="Subtype id" />
-                <label for="SubtypeIdInput">Subtype id</label>
+                <InputSelect TValue="int" class="form-control" @bind-Value="subscription.SubTypeId" id="SubtypeIdInput">
+                    @foreach (var subType in subTypes)
+                    {
+                        <option value="@subType.Id">@subType.Title</option>
+                    }
+                </InputSelect>
+                <label for="SubtypeIdInput">Subtype</label>
             </div>
             <div class="form-floating mb-3 text-center">
                 <button class="btn btn-primary" type="submit">Create</button>
@@ -25,6 +31,7 @@
 
 @code {
     public SubscriptionCreateUserDto subscription = new SubscriptionCreateUserDto();
+    public IEnumerable<SubTypeDto> subTypes = new List<SubTypeDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthService.IsUserAuthenticated())
@@ -32,6 +39,8 @@
             NavigationManager.NavigateTo("/login");
             return;
         }
+        await SubTypeService.GetAllAsync();
+        subTypes = SubTypeService.ItemList;
     }
     private async Task HandleSubmit()
     {

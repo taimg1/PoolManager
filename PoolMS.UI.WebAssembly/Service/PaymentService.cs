@@ -73,6 +73,12 @@ namespace PoolMS.UI.WebAssembly.Service
             var result = await _httpClient.PostAsJsonAsync("api/payment/pay", amout);
             return result.IsSuccessStatusCode;
         }
-     
+        public async Task<HttpResponseMessage> GetPaymentReport()
+        {
+            await _authService.SetJwtTokenInHeader();
+            return await _httpClient.GetAsync("api/payment/paymentreport");
+        }
+
+
     }
 }

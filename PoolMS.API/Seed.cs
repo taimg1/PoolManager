@@ -1,6 +1,6 @@
 ﻿using PoolMS.Core;
 using PoolMS.Core.Entities;
-using PoolMS.Repository;
+using PoolMS.Repository.Repository;
 using System.Linq;
 
 namespace PoolMS.API

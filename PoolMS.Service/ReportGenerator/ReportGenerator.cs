@@ -62,5 +62,23 @@ namespace PoolMS.Service.ReportGenerator
                 document.Save();
             }
         }
+        public static string GeneratePaymentReport(List<Payment> payments)
+        {
+            var filePath = System.IO.Path.GetTempFileName();
+
+            using (DocX document = DocX.Create(filePath))
+            {
+                document.InsertParagraph("Payment Report").FontSize(20).SpacingAfter(50);
+
+                foreach (var payment in payments)
+                {
+                    document.InsertParagraph($"Payment ID: {payment.Id}, User ID: {payment.User.Id}, Amount: {payment.Amount}, Payment Day: {payment.PaymentDay}");
+                }
+
+                document.Save();
+            }
+
+            return filePath;
+        }
     }
 }

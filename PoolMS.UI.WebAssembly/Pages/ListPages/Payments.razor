@@ -1,8 +1,10 @@
 ﻿@page "/payments"
 
+
 @inject IPaymentService PaymentService
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
+@inject IJSRuntime JSRuntime
 
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-5 shadow-sm mx-5 ">
@@ -14,6 +16,12 @@
                 <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue" aria-label="Search" aria-describedby="button-addon2" />
                 <button class="btn btn-primary" @onclick="()=> SearchButton()" type="button" id="button-addon2">Search</button>
             </div>
+
+            <div class="input-group mb-3">
+                <button class="btn btn-primary"  type="button">Add payment</button>
+               
+
+                </div>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -74,4 +82,7 @@
         }
         paymentDtos = PaymentService.ItemList;
     }
+  
+
+
 }

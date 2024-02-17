@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PoolMS.Core.Entities;
-using PoolMS.Repository;
 using PoolMS.Repository.Interface;
+using PoolMS.Repository.Repository;
 using PoolMS.Service.Interface;
 
 namespace PoolMS.API.Controllers.DataControllers

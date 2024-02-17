@@ -7,11 +7,12 @@ using PoolMS.API.Auth;
 using PoolMS.API.OptionsSetup;
 using PoolMS.Core;
 using PoolMS.Core.Entities;
-using PoolMS.Repository;
 using PoolMS.Repository.Interface;
+using PoolMS.Repository.Repository;
 using PoolMS.Service.DataConvertor;
 using PoolMS.Service.Interface;
 using PoolMS.Service.JWT;
+using Xceed.Document.NET;
 
 namespace PoolMS.API
 {
@@ -71,8 +72,8 @@ namespace PoolMS.API
             builder.Services.AddScoped<IJwtProvider,JwtProvider>();
 
 
+        
 
-            //builder.Services.AddScoped(typeof(ICsvDataConvertor<>), typeof(CSVDataConvertor<>));
 
 
             builder.Services.AddScoped<UserRepository>();

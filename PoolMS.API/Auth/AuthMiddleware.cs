@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using PoolMS.Repository;
+using PoolMS.Repository.Repository;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace PoolMS.API.Auth
