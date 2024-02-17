@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using PoolMS.UI.WebAssembly.Auth;
+using System.Buffers;
 
 namespace PoolMS.UI.WebAssembly.Service
 {
@@ -32,7 +33,11 @@ namespace PoolMS.UI.WebAssembly.Service
         public async Task DeleteAsync(int id)
         {
             await _authService.SetJwtTokenInHeader();
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync($"api/role/delete/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {response.StatusCode}");
+            }
         }
 
         public async Task GetAllAsync()
@@ -48,16 +53,22 @@ namespace PoolMS.UI.WebAssembly.Service
 
         public async Task<RoleDto> GetByIdAsync(int id)
         {
+  
             await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetAsync($"api/role/{id}");
-            if (result.StatusCode == HttpStatusCode.OK)
-                return await result.Content.ReadFromJsonAsync<RoleDto>();
-            else
+            if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                Console.WriteLine(id+1);
                 return null;
+            }
+            if (!result.IsSuccessStatusCode)
+            {
+     
+                throw new HttpRequestException($"Unexpected HTTP status code {result.StatusCode}");
+            }
+
+            return await result.Content.ReadFromJsonAsync<RoleDto>();
         }
-
-
-
         public async Task UpdateAsync(RoleUpdateDto entity)
         {
             await _authService.SetJwtTokenInHeader();

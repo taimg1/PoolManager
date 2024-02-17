@@ -56,16 +56,15 @@ else
         {
             var result = await VisitService.GetByIdAsync((int)Id);
             if (result is not null)
-                visit = _mapper.Map<VisitUpdateDto>(visit);
+                visit = _mapper.Map<VisitUpdateDto>(result);
             else
-                NavigationManager.NavigateTo("/visit");
+                NavigationManager.NavigateTo("/admin/visits-reservations");
         }
     }
-    async Task HandleSubmit()
+    private async Task HandleSubmit()
     {
         if (Id is not null)
             await VisitService.UpdateAsync(visit);
-        else
-            await VisitService.AddAsync(_mapper.Map<VisitCreateDto>(visit));    
+        
     }
 }

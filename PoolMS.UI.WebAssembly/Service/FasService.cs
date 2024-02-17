@@ -10,7 +10,7 @@ namespace PoolMS.UI.WebAssembly.Service
         {
             _httpClient = httpClient;
         }
-        List<PoolDto> ItemList { get; set; } = new List<PoolDto>();
+        public List<PoolDto> ItemList { get; set; } = new List<PoolDto>();
         public async Task GetPopular()
         {
             var result = await _httpClient.GetFromJsonAsync<List<PoolDto>>("api/fas/popular");
@@ -59,12 +59,12 @@ namespace PoolMS.UI.WebAssembly.Service
                 ItemList = result;
             }
         }
-        public async Task Search(string value)
+        public async Task Search(SearchDto searchDto)
         {
-            var result = await _httpClient.GetFromJsonAsync<List<PoolDto>>($"api/fas/search{value}");
-            if (result != null)
+            var result = await _httpClient.PostAsJsonAsync("api/fas/search", searchDto);
+            if (result.IsSuccessStatusCode)
             {
-                ItemList = result;
+                ItemList = await result.Content.ReadFromJsonAsync<List<PoolDto>>();
             }
         }
 

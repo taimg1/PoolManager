@@ -1,0 +1,113 @@
+﻿@inject AuthService AuthService
+
+<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">PoolMS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                        Home
+                    </NavLink>
+                </li>
+                @if (isAuthenticated)
+                {
+                    if (userRole == "Admin")
+                    {
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="pool_poolsize">
+                                Pool/PoolSize
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="admin/visits-reservations">
+                                Reservations/Visits
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="sub_sybtype">
+                                Subs/Subtypes
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="users-roles">
+                                Users/Roles
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="payments">
+                                Payments
+                            </NavLink>
+                        </li>
+
+                    }
+                    if (userRole == "User")
+                    {
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="visits-reservations">
+                                Reservations/Visits
+                            </NavLink>
+                        </li>
+                        
+                    }
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="login">
+                            Login
+                        </NavLink>
+                    </li>
+                }
+            </ul>
+            @if (isAuthenticated)
+            {
+                @* <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <NavLink class="dropdown-item" href="user/account">
+                                Account
+                            </NavLink>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="">Logout</a>
+                        </div>
+                    </li>
+                </ul> *@
+                <ul class="navbar-nav text-light">
+                    <li class="nav-item">
+                        <NavLink class="dropdown-item" href="user/account">
+                            Account
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" @onclick="()=> LogOut()" href="">Logout</a>
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool isAuthenticated;
+    private string userRole;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsUserAuthenticated();
+        if (isAuthenticated)
+        {
+            userRole = await AuthService.GetUserRole();
+        }
+    }
+    private async Task LogOut()
+    {
+        await AuthService.Logout();
+    }
+}

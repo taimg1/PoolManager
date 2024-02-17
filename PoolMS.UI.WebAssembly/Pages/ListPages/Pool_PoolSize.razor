@@ -1,11 +1,11 @@
 ﻿@page "/pool_poolsize"
 
-@inject IService<PoolDto, PoolCreateDto, PoolUpdateDto> PoolService
+@inject IPoolService PoolService
 @inject IService<PoolSizeDto, PoolSizeCreateDto, PoolSizeUpdateDto> PoolSizeService
 @inject AuthorizeAdmin AuthorizeAdmin
-
-
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
 <h3>Pool_PoolSize</h3>
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-6 shadow-sm mx-5">
@@ -14,6 +14,10 @@
         </div>
         <div class="form-group mt-2">
             <button class="btn btn-primary" @onclick="CreatePage" type="submit">Create</button>
+        </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue1" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonPool()" type="button" id="button-addon2">Search</button>
         </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
@@ -25,10 +29,11 @@
                         <th>Total capacity</th>
                         <th>Edit</th>
                         <th>Delete</th>
+                        <th>Get Docx</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var pool in PoolService.ItemList)
+                    @foreach (var pool in poolDtos)
                     {
                         <tr>
                             <td>@pool.Id</td>
@@ -47,6 +52,12 @@
                                     <i class="bi bi-trash3"></i>
                                 </button>
                             </td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="()=> GetDocx(pool.Id)">
+                                    <i class="oi oi-document"></i>
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -59,6 +70,10 @@
         </div>
         <div class="form-group mt-2">
             <button class="btn btn-primary" @onclick="CreatePagePoolSize" type="submit">Create</button>
+        </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue2" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonPoolSize()" type="button" id="button-addon2">Search</button>
         </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
@@ -74,7 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var poolSize in PoolSizeService.ItemList)
+                    @foreach (var poolSize in poolSizeDtos)
                     {
                         <tr>
                             <td>@poolSize.Id</td>
@@ -104,14 +119,47 @@
 </div>
 
 @code {
+    private int SearchValue1 { get; set; }
+    private int SearchValue2 { get; set; }
+    private List<PoolDto> poolDtos = new List<PoolDto>();
+    private List<PoolSizeDto> poolSizeDtos = new List<PoolSizeDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole())
             return;
-      
+
         await PoolService.GetAllAsync();
         await PoolSizeService.GetAllAsync();
+        poolDtos = PoolService.ItemList;      
+        poolSizeDtos = PoolSizeService.ItemList;
     }
+    private async Task SearchButtonPool()
+    {
+        if (SearchValue1 > 0)
+        {
+            var result = await PoolService.GetByIdAsync(SearchValue1);
+            if (result != null)
+            {
+                PoolService.ItemList = new List<PoolDto> { result };
+                return;
+            }
+        }
+        poolDtos = PoolService.ItemList;
+    }
+    private async Task SearchButtonPoolSize()
+    {
+        if (SearchValue2 > 0)
+        {
+            var result = await PoolSizeService.GetByIdAsync(SearchValue2);
+            if (result != null)
+            {
+                poolSizeDtos = new List<PoolSizeDto> { result };
+                return;
+            }
+        }
+        poolSizeDtos = PoolSizeService.ItemList;
+    }
+
     public void ShowPool(int id)
     {
         NavigationManager.NavigateTo($"/pool/{id}");
@@ -127,12 +175,13 @@
     public async Task DeletePool(int poolId)
     {
         await PoolService.DeleteAsync(poolId);
-        ReloadPage();
+        await SearchButtonPool();
     }
+
     public async Task DeletePoolSize(int poolSizeId)
     {
         await PoolSizeService.DeleteAsync(poolSizeId);
-        ReloadPage();
+        await SearchButtonPoolSize();
     }
     public void ReloadPage()
     {
@@ -143,4 +192,11 @@
     {
         NavigationManager.NavigateTo($"/poolsize/create");
     }
+   public async Task GetDocx(int poolId)
+    {
+        await JSRuntime.InvokeVoidAsync("downloadFile", $"api/pool/poolusagereport/{poolId}");
+    }
+
+
+    
 }

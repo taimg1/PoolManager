@@ -52,9 +52,16 @@ namespace PoolMS.UI.WebAssembly.Service
         {
             await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetAsync($"api/subscription/{id}");
-            if (result.StatusCode == HttpStatusCode.OK)
-                return await result.Content.ReadFromJsonAsync<SubscriptionDto>();
-            return null;
+            if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {result.StatusCode}");
+            }
+            return await result.Content.ReadFromJsonAsync<SubscriptionDto>();
+           
         }
         public async Task GetByUser()
         {

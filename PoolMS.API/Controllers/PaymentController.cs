@@ -112,11 +112,21 @@ namespace PoolMS.API.Controllers
             var payment = await _paymentRepository.GetByIdAsync(id);
 
             if (payment is null)
-                return BadRequest("Payment not found");
+                return NotFound("Payment not found");
 
             await _paymentRepository.DeleteAsync(payment);
 
             return Ok($"Payment {payment.Id} deleted");
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPayment(int id)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(id);
+            if (payment is null)
+                return NotFound("Payment not found");
+
+            var paymentDto = _mapper.Map<PaymentDto>(payment);
+            return Ok(paymentDto);
         }
         //[HttpGet("export/csv")]
         //[RoleAuth(Role = "Admin")]
@@ -131,7 +141,7 @@ namespace PoolMS.API.Controllers
 
         //    var bytes = Encoding.UTF8.GetBytes(await _csvDataConvertor.Write(await _paymentRepository.GetAllAsync()));
         //    return File(bytes, contentType, filename);
-         
+
         //}
         //[HttpPost]
         //[RoleAuth(Role = "Admin")]

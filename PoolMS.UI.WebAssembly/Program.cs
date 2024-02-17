@@ -5,6 +5,8 @@ using PoolMS.Service.DTO;
 using PoolMS.UI.WebAssembly.Auth;
 using Blazored.LocalStorage;
 using PoolMS.UI.WebAssembly.Service;
+using Xceed.Document.NET;
+
 
 namespace PoolMS.UI.WebAssembly
 {
@@ -18,7 +20,7 @@ namespace PoolMS.UI.WebAssembly
 
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5208")});
-            builder.Services.AddScoped<IService<PoolDto, PoolCreateDto, PoolUpdateDto>, PoolService>();
+            builder.Services.AddScoped<IPoolService, PoolService>();
             builder.Services.AddScoped<IService<PoolSizeDto, PoolSizeCreateDto, PoolSizeUpdateDto>, PoolSizeService>();
             builder.Services.AddScoped<IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto>, ReservationService>();
             builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
@@ -34,6 +36,8 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<AuthorizeAdmin>();
             builder.Services.AddScoped<SubscriptionService>();  
             builder.Services.AddScoped<FasService>();
+
+
             builder.Services.AddAuthorizationCore();
            
 

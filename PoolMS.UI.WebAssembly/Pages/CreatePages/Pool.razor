@@ -1,7 +1,7 @@
 ﻿@page "/pool/create"
 @attribute [Authorize]
 
-@inject IService<PoolDto, PoolCreateDto, PoolUpdateDto> PoolService
+@inject IPoolService PoolService
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
 @inject IMapper _mapper

@@ -71,7 +71,7 @@ namespace PoolMS.API.Controllers
             var pool = await _poolRepository.GetByIdAsync(visitCreateDto.PoolId);
             if (pool is null)
                 return BadRequest("Pool not found");
-
+            pool.TotalCapacity++;
             visit.Pool = pool;
 
             var user = await _userRepository.GetByIdAsync(visitCreateDto.UserId);

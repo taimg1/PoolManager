@@ -47,11 +47,16 @@ namespace PoolMS.UI.WebAssembly.Service
         {
             await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetAsync($"api/visit/{id}");
-            if (result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.NotFound)
             {
-                return await result.Content.ReadFromJsonAsync<VisitDto>();
+                return null;
             }
-            return null;
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {result.StatusCode}");
+            }
+            return await result.Content.ReadFromJsonAsync<VisitDto>();
+       
         }
 
         public async Task GetByUser()

@@ -35,7 +35,7 @@ namespace PoolMS.API.Controllers
         {
             var role = await _roleRepository.GetByIdAsync(id);
             if (role is null)
-                return BadRequest("Role not found");
+                return NotFound("Role not found");
 
             var roleDto = _mapper.Map<RoleDto>(role);
             return Ok(roleDto);

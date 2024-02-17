@@ -4,12 +4,18 @@
 @inject IService<RoleDto, RoleCreateDto, RoleUpdateDto> RoleService
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
+@inject IJSRuntime JSRuntime
 
 <div class="row mt-5 d-flex justify-content-around">
     <div class="col-12 col-md-6 shadow-sm mx-5">
         <div class="form-floating mt-2">
             <h2>User list</h2>
         </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="()=> Registration()" type="submit">Create</button>
+        </div>
+        <InputText class="form-control" placeholder="Search" @bind-Value="SearchValue1" aria-label="Search" aria-describedby="button-addon2" />
+        <button class="btn btn-primary" @onclick="()=> SearchButtonUser()" type="button" id="button-addon2">Search</button>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -25,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach(var user in UserService.ItemList)
+                    @foreach (var user in userDtos)
                         {
                             <tr>
                                 <td>@user.Id</td>
@@ -41,10 +47,10 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger"
-                                        @onclick="()=> UserService.DeleteAsync(user.Id)">
-                                        <i class="oi oi-trash"></i>
-                                    </button>
+                                <button class="btn btn-danger"
+                                        @onclick="async () => await DeleteUser(user.Id)">
+                                    <i class="oi oi-trash"></i>
+                                </button>
                                 </td>
                             </tr>
                         }
@@ -55,6 +61,13 @@
     <div class="col-12 col-md-4 shadow-sm mx-5">
         <div class="form-floating mt-2">
             <h2>Role list</h2>
+        </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="()=> CreateRole()" type="submit">Create</button>
+        </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue2" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonRole()" type="button" id="button-addon2">Search</button>
         </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
@@ -67,7 +80,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach(var role in RoleService.ItemList)
+                    @foreach (var role in roleDtos)
                         {
                             <tr>
                                 <td>@role.Id</td>
@@ -79,10 +92,10 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger"
-                                        @onclick="()=> RoleService.DeleteAsync(role.Id)">
-                                        <i class="oi oi-trash"></i>
-                                    </button>
+                                <button class="btn btn-danger"
+                                        @onclick="async () => await DeleteRole(role.Id)">
+                                    <i class="oi oi-trash"></i>
+                                </button>
                                 </td>
                             </tr>
                         }
@@ -92,16 +105,95 @@
     </div>
 </div>
 @code {
+    private string SearchValue1 { get; set; }
+    private int SearchValue2 { get; set; }
+    private List<UserDto> userDtos = new List<UserDto>();
+    private List<RoleDto> roleDtos = new List<RoleDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole()) 
             return;
         await UserService.GetAllAsync();
         await RoleService.GetAllAsync();
+        userDtos = UserService.ItemList;
+        roleDtos = RoleService.ItemList;
+    }
+    private void Registration()
+    {
+        NavigationManager.NavigateTo("/user/register");
+    }
+    private async Task SearchButtonUser()
+    {
+        if (SearchValue1 == null)
+        {
+            await UserService.GetAllAsync();
+            userDtos = UserService.ItemList;
+        }
+        else
+        {
+            UserEmailDto userEmailDto = new UserEmailDto { Email = SearchValue1 };
+            var user = await UserService.GetUserByEmail(userEmailDto);
+            if (user != null)
+            {
+                userDtos = new List<UserDto> { user };
+            }
+            else
+            {
+                userDtos = new List<UserDto>();
+            }
+        }
+        StateHasChanged(); 
+    }
+    private async Task SearchButtonRole()
+    {
+        Console.WriteLine("SearchButtonRole called");
+
+        if (SearchValue2 > 0)
+        {
+
+            var result = await RoleService.GetByIdAsync(SearchValue2);
+
+            if (result != null)
+            {
+
+                roleDtos = new List<RoleDto> { result };
+            }
+        }
+        else
+        {
+            roleDtos = RoleService.ItemList;
+        }
+
+        StateHasChanged(); // Add this line
+    }
+    private async Task DeleteUser(int id)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this user?");
+        if (confirmed)
+        {
+            await UserService.DeleteAsync(id);
+            await SearchButtonUser();
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteRole(int id)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this role?");
+        if (confirmed)
+        {
+            await RoleService.DeleteAsync(id);
+            await SearchButtonRole();
+            StateHasChanged();
+        }
+    }
+public void CreateRole()
+    {
+        NavigationManager.NavigateTo("/role/create");
     }
     public void ShowUser(int id)
     {
-        NavigationManager.NavigateTo($"/user/{id}");
+        NavigationManager.NavigateTo($"/admin/user/edit/{id:int}");
     }
     public void ShowRole(int id)
     {

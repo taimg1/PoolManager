@@ -58,7 +58,7 @@ namespace PoolMS.API.Controllers
         {
             var reservation = await _reservationRepository.GetByIdAsync(id);
             if (reservation is null)
-                return BadRequest("Reservation not found");
+                return NotFound("Reservation not found");
 
             var reservationDto = _mapper.Map<ReservationDto>(reservation);
             return Ok(reservationDto);

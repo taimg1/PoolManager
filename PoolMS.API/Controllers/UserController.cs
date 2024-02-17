@@ -51,7 +51,7 @@ namespace PoolMS.API.Controllers
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user is null)
-                return BadRequest("User not found");
+                return NotFound("User not found");
             var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
@@ -137,6 +137,15 @@ namespace PoolMS.API.Controllers
             await _userRepository.ChangeRole(userid, roleid);
             return Ok($"User {userid} get new role {roleid}");
 
+        }
+        [HttpGet("email")]
+        public async Task<IActionResult> GetByEmail([FromQuery] UserEmailDto userEmailDto)
+        {
+            var user = await _userRepository.GetByEmail(userEmailDto.Email);
+            if (user is null)
+                return NotFound("User not found");
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
         }
     }
 }

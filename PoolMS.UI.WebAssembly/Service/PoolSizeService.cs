@@ -3,6 +3,7 @@ using PoolMS.Service.DTO;
 using System.Net;
 using System.Net.Http.Json;
 using PoolMS.UI.WebAssembly.Auth;
+using Azure;
 
 namespace PoolMS.UI.WebAssembly.Service
 {
@@ -47,11 +48,17 @@ namespace PoolMS.UI.WebAssembly.Service
         public async Task<PoolSizeDto> GetByIdAsync(int id)
         {
             await _authService.SetJwtTokenInHeader();
-            var result = await _httpClient.GetAsync($"api/poolsize/{id}");
-            if (result.StatusCode == HttpStatusCode.OK)
-                return await result.Content.ReadFromJsonAsync<PoolSizeDto>();
-            else
+            var response = await _httpClient.GetAsync($"api/poolsize/{id}");
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {response.StatusCode}");
+            }
+            return await response.Content.ReadFromJsonAsync<PoolSizeDto>();
+        
         }
 
         public Task GetByUser()

@@ -5,6 +5,7 @@ using PoolMS.Core.Entities;
 using PoolMS.Repository;
 using PoolMS.Repository.Interface;
 using PoolMS.Service.DTO;
+using PoolMS.Service.ReportGenerator;
 
 namespace PoolMS.API.Controllers
 {
@@ -14,12 +15,14 @@ namespace PoolMS.API.Controllers
     {
         private readonly IRepository<Pool> _poolRepository;
         private readonly IRepository<PoolSize> _poolSizeRepository;
+        private readonly IRepository<Visit> _visitRepository;
         private readonly IMapper _mapper;
-        public PoolController(IRepository<Pool> poolRepository, IMapper mapper , IRepository<PoolSize> poolSizeRepository)
+        public PoolController(IRepository<Pool> poolRepository, IMapper mapper , IRepository<PoolSize> poolSizeRepository, IRepository<Visit> visitRepository)
         {
             _poolRepository = poolRepository;
             _mapper = mapper;
             _poolSizeRepository = poolSizeRepository;
+            _visitRepository = visitRepository;
         }
         [HttpGet("list")]
         public async Task<IActionResult> GetAllPools()
@@ -57,7 +60,7 @@ namespace PoolMS.API.Controllers
         {
             var pool = await _poolRepository.GetByIdAsync(id);
             if (pool is null)
-                return BadRequest("Pool not found");
+                return NotFound("Pool not found");
 
             var poolDto = _mapper.Map<PoolDto>(pool);
             return Ok(poolDto);
@@ -102,6 +105,25 @@ namespace PoolMS.API.Controllers
 
             return Ok($"Pool {pool.Id} updated");
         }
+        [HttpGet("poolusagereport/{Id}")]
+        public async Task<IActionResult> GetPoolUsageReport(int Id)
+        {
+            var pool = await _poolRepository.GetByIdAsync(Id);
+            var filePath = ReportGenerator.GeneratePoolUsageReport(pool);
+
+            var stream = new FileStream(filePath, FileMode.Open);
+            var result = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            {
+                FileDownloadName = "PoolUsageReport.docx"
+            };
+
+            // Delete the temporary file
+            stream.Close();
+            System.IO.File.Delete(filePath);
+
+            return result;
+        }
+
     }
 }
 

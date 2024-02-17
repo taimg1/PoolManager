@@ -50,8 +50,19 @@ namespace PoolMS.UI.WebAssembly.Service
         }
         public async Task<PaymentDto> GetByIdAsync(int id)
         {
-            await _authService.SetJwtTokenInHeader();
-            return await _httpClient.GetFromJsonAsync<PaymentDto>($"api/payment/{id}");
+            var response = await _httpClient.GetAsync($"api/payment/{id}");
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {response.StatusCode}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<PaymentDto>();
         }
 
 

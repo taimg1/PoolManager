@@ -8,7 +8,7 @@
     <div class="col-12 col-md-5 shadow-sm mx-5">
         <div class="form-floating mt-2">
             <h2>Visit list</h2>
-        </div>
+        </div>       
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -36,7 +36,7 @@
     <div class="col-12 col-md-4 shadow-sm mx-5">
         <div class="form-floating mt-2">
             <h2>Reservation list</h2>
-        </div>
+        </div>      
         <div class="form-floating mt-2">
             <button class="btn btn-primary" @onclick="()=> CreatePageReservation()">Create</button>
         </div>
@@ -60,7 +60,7 @@
                             <td>@reservation.Subscription.Id</td>
                             <td>
                                 <button class="btn btn-primary"
-                                        @onclick="()=> ReservationService.DeleteAsync(reservation.Id)">
+                                        @onclick="async () => await DeleteReservation(reservation.Id)">
                                     <i class="oi oi-pencil"></i>
                                 </button>
                             </td>
@@ -73,14 +73,25 @@
 </div>
 
 @code {
+    
     protected override async Task OnInitializedAsync()
     {
         await VisitService.GetByUser();
         await ReservationService.GetByUser();
+       
+    }
+    private async Task DeleteReservation(int id)
+    {
+        await ReservationService.DeleteAsync(id);
+        await OnInitializedAsync();
     }
     private void CreatePageReservation()
     {
-        NavigationManager.NavigateTo("/reservation");
+        NavigationManager.NavigateTo("/reservation/create");
+    }
+    private void CreatePageVisit()
+    {
+        NavigationManager.NavigateTo("/visit/create");
     }
 
 }

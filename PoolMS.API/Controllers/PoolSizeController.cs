@@ -35,7 +35,7 @@ namespace PoolMS.API.Controllers
         {
             var poolSize = await _poolSizeRepository.GetByIdAsync(id);
             if (poolSize is null)
-                return BadRequest("PoolSize not found");
+                return NotFound("PoolSize not found");
 
             var poolSizeDto = _mapper.Map<PoolSizeDto>(poolSize);
             return Ok(poolSizeDto);

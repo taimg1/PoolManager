@@ -13,6 +13,10 @@
         <div class="form-group mt-2">
             <button class="btn btn-primary" @onclick="CreatePageSub" type="submit">Create</button>
         </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue1" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonSub()" type="button" id="button-addon2">Search</button>
+        </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -28,7 +32,7 @@
                 </thead>
                     
                 <tbody>
-                    @foreach(var subscription in SubscriptionService.ItemList)
+                    @foreach(var subscription in subscriptionDtos)
                     {
                         <tr>
                             <td>@subscription.Id</td>
@@ -44,7 +48,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-danger"
-                                    @onclick="()=> SubscriptionService.DeleteAsync(subscription.Id)">
+                                        @onclick="async () => await DeleteSubscription(subscription.Id)">
                                     <i class="oi oi-trash"></i>
                                 </button>
                             </td>
@@ -61,6 +65,10 @@
         <div class="form-group mt-2">
             <button class="btn btn-primary" @onclick="CreatePageSubType" type="submit">Create</button>
         </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue2" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonSubType()" type="button" id="button-addon2">Search</button>
+        </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -72,7 +80,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                    @foreach(var subType in SubTypeService.ItemList)
+                    @foreach(var subType in subTypeDtos)
                     {
                         <tr>
                             <td>@subType.Id</td>
@@ -86,7 +94,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-danger"
-                                    @onclick="()=> SubTypeService.DeleteAsync(subType.Id)">
+                                        @onclick="async () => await DeleteSubType(subType.Id)">
                                     <i class="oi oi-trash"></i>
                                 </button>
                             </td>
@@ -99,13 +107,61 @@
 </div>
 
 @code {
+    private int SearchValue1 { get; set; }
+    private int SearchValue2 { get; set; }
+    private List<SubTypeDto> subTypeDtos = new List<SubTypeDto>();
+    private List<SubscriptionDto> subscriptionDtos = new List<SubscriptionDto>();
+
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole()) 
             return;
+
         await SubTypeService.GetAllAsync();
         await SubscriptionService.GetAllAsync();
+        StateHasChanged();
+        subscriptionDtos = SubscriptionService.ItemList;
+        subTypeDtos = SubTypeService.ItemList;
     }
+    private async Task DeleteSubscription(int id)
+    {
+        await SubscriptionService.DeleteAsync(id);
+        await SearchButtonSub();
+    }
+
+    private async Task DeleteSubType(int id)
+    {
+        await SubTypeService.DeleteAsync(id);
+        await SearchButtonSubType();
+    }
+    private async Task SearchButtonSub()
+    {
+        if (SearchValue1 > 0)
+        {
+            var result = await SubscriptionService.GetByIdAsync(SearchValue1);
+            if (result != null)
+            {
+                subscriptionDtos = new List<SubscriptionDto> { result };
+                return;
+            }
+        }
+        subscriptionDtos = SubscriptionService.ItemList;
+    }
+    private async Task SearchButtonSubType()
+    {
+        if (SearchValue2 > 0)
+        {
+            var result = await SubTypeService.GetByIdAsync(SearchValue2);
+            if (result != null)
+            {
+                subTypeDtos = new List<SubTypeDto> { result };
+                return;
+            }
+        }
+        subTypeDtos = SubTypeService.ItemList;
+    }
+
+
     public void ShowSubscription(int id)
     {
         NavigationManager.NavigateTo($"/subscription/{id}");
@@ -116,10 +172,10 @@
     }
     public void CreatePageSub()
     {
-        NavigationManager.NavigateTo("/subscription");
+        NavigationManager.NavigateTo("/subscription/admin/creat");
     }
     public void CreatePageSubType()
     {
-        NavigationManager.NavigateTo("/subtype");
+        NavigationManager.NavigateTo("/subtype/create");
     }
 }

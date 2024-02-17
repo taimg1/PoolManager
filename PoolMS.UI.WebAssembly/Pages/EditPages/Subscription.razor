@@ -1,7 +1,7 @@
 ﻿@page "/subscription/{id:int}"
 @attribute [Authorize]
 
-@inject IService<SubscriptionDto, SubscriptionCreateDto, SubscriptionUpdateDto> SubscriptionService
+@inject ISubscriptionService SubscriptionService
 @inject IMapper _mapper
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin

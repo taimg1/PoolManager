@@ -52,7 +52,7 @@ namespace PoolMS.API.Controllers
         {
             var subscription = await _subscriptionRepository.GetByIdAsync(id);
             if (subscription is null)
-                return BadRequest("Subscription not found");
+                return NotFound("Subscription not found");
 
             var subscriptionDto = _mapper.Map<SubscriptionDto>(subscription);
             return Ok(subscriptionDto);

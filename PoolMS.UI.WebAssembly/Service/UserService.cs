@@ -32,6 +32,7 @@ namespace PoolMS.UI.WebAssembly.Service
         }
         public async Task GetAllAsync()
         {
+            await _authService.SetJwtTokenInHeader();
             var response = await _httpClient.GetFromJsonAsync<List<UserDto>>("api/user/list");
             if (response != null)
             {
@@ -43,12 +44,16 @@ namespace PoolMS.UI.WebAssembly.Service
             await _authService.SetJwtTokenInHeader();
             await _httpClient.PutAsJsonAsync("api/user/update", entity);
         }
-
+        public async Task UpdateUserAdmin(UserUpdateDto entity)
+        {
+            await _authService.SetJwtTokenInHeader();
+            await _httpClient.PutAsJsonAsync("api/admin/updat", entity);
+        }
         public async Task DeleteAsync(int id)
         {
             await _httpClient.DeleteAsync($"api/user/delete/{id}");
         }
-
+     
         public async Task<UserDto> GetByIdAsync(int id)
         {
             var result = await _httpClient.GetAsync($"api/user/info/{id}");
@@ -62,6 +67,28 @@ namespace PoolMS.UI.WebAssembly.Service
             await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetFromJsonAsync<UserDto>("api/user/info");
             return result;
+        }
+
+        public async Task<UserDto> GetUserByEmail(UserEmailDto userEmailDto)
+        {
+            var response = await _httpClient.GetAsync($"api/user/email?email={userEmailDto.Email}");
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {response.StatusCode}");
+            }
+
+            return await response.Content.ReadFromJsonAsync<UserDto>();
+        }
+
+        public async Task Logout()
+        {
+            await _authService.Logout();
         }
     }
 }

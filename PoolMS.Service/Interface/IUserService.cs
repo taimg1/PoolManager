@@ -8,8 +8,11 @@ namespace PoolMS.Service.Interface
         Task<UserDto> GetByIdAsync(int id);
         Task Registration(UserRegDto entity);
         Task UpdateAsync(UserUpdateDto entity);
+        Task UpdateUserAdmin(UserUpdateDto entity);
         Task DeleteAsync(int id);
         Task GetAllAsync();
         Task<UserDto> GetUser();
+        Task<UserDto> GetUserByEmail(UserEmailDto userEmailDto);
+        Task Logout();
     }
 }

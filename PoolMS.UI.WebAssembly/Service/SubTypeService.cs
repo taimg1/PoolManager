@@ -37,7 +37,7 @@ namespace PoolMS.UI.WebAssembly.Service
 
         public async Task GetAllAsync()
         {
-
+            await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetFromJsonAsync<List<SubTypeDto>>("api/subtype/list");
             if (result != null)
             {
@@ -50,10 +50,16 @@ namespace PoolMS.UI.WebAssembly.Service
         {
             await _authService.SetJwtTokenInHeader();
             var result = await _httpClient.GetAsync($"api/subtype/{id}");
-            if (result.StatusCode == HttpStatusCode.OK)
-                return await result.Content.ReadFromJsonAsync<SubTypeDto>();
-            else
+            if (result.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Unexpected HTTP status code {result.StatusCode}");
+            }
+            return await result.Content.ReadFromJsonAsync<SubTypeDto>();
+    
         }
 
         public Task GetByUser()

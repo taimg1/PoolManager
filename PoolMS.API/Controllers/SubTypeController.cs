@@ -35,7 +35,7 @@ namespace PoolMS.API.Controllers
         {
             var subType = await _subTypeRepository.GetByIdAsync(id);
             if (subType is null)
-                return BadRequest("SubType not found");
+                return NotFound("SubType not found");
 
             var subTypeDto = _mapper.Map<SubTypeDto>(subType);
             return Ok(subTypeDto);

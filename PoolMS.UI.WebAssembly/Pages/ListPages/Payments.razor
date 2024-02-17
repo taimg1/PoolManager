@@ -10,6 +10,10 @@
             <h2>Payment history</h2>
         </div>
         <div class="form-floating mb-3">
+            <div class="input-group mb-3">
+                <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue" aria-label="Search" aria-describedby="button-addon2" />
+                <button class="btn btn-primary" @onclick="()=> SearchButton()" type="button" id="button-addon2">Search</button>
+            </div>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -20,15 +24,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                     @foreach(var payment in PaymentService.ItemList)
+                    @foreach (var payment in paymentDtos)
                      {
                         <tr>
                             <td>@payment.Id</td>
                             <td>@payment.PaymentDay</td>
                             <td>@payment.Amount</td>
                             <td>
-                            <button class="btn btn-danger"
-                                        @onclick="()=> PaymentService.DeleteAsync(payment.Id)">
+                                <button class="btn btn-danger"
+                                        @onclick="async () => await DeletePayment(payment.Id)">
                                     <i class="bi bi-trash3"></i>
                                 </button>
                             </td>
@@ -40,11 +44,34 @@
 </div>
 
 @code {
+    private int SearchValue { get; set; }
+    private List<PaymentDto> paymentDtos = new List<PaymentDto>();
+
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole()) 
             return;
         await AuthorizeAdmin.CheckUserRole();
         await PaymentService.GetAllAsync();
+        paymentDtos = PaymentService.ItemList;
+    }
+    private async Task DeletePayment(int id)
+    {
+        await PaymentService.DeleteAsync(id);
+        await SearchButton();
+        StateHasChanged();
+    }
+    private async Task SearchButton()
+    {
+        if (SearchValue > 0)
+        {
+            var result = await PaymentService.GetByIdAsync(SearchValue);
+            if (result != null)
+            {
+                paymentDtos = new List<PaymentDto> { result };
+                return;
+            }
+        }
+        paymentDtos = PaymentService.ItemList;
     }
 }

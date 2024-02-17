@@ -33,6 +33,6 @@
     private async Task HandleSubmit()
     {
         await ReservationService.AddAsyncByUser(reservation);
-        NavigationManager.NavigateTo("/reservation");
+        NavigationManager.NavigateTo("admin/visits-reservations");
     }
 }

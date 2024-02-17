@@ -16,7 +16,10 @@
                 <InputText class="form-control" @bind-Value="subType.Title" id="TitleInput" placeholder="Title" />
                 <label for="TitleInput">Title</label>
             </div>
-
+            <div class="form-floating mb-3">
+                <InputNumber TValue="int" class="form-control" @bind-Value="subType.Days" id="PriceInput" placeholder="Price" />
+                <label for="PriceInput">Days</label>
+            </div>
             <div class="form-floating mb-3">
                 <InputNumber TValue="int" class="form-control" @bind-Value="subType.Price" id="PriceInput" placeholder="Price" />
                 <label for="PriceInput">Price</label>
@@ -38,6 +41,6 @@
     private async Task HandleSubmit()
     {
         await SubTypeService.AddAsync(subType);
-        NavigationManager.NavigateTo("/sub-subtypes");
+        NavigationManager.NavigateTo("/admin/sub-subtypes");
     }
 }

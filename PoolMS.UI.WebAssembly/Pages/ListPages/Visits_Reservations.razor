@@ -9,6 +9,13 @@
         <div class="form-floating mt-2">
             <h2>Visit list</h2>
         </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="VisitCreate" type="submit">Create</button>
+        </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue1" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonRes()" type="button" id="button-addon2">Search</button>
+        </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -23,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var visit in VisitService.ItemList)
+                    @foreach(var visit in visitDtos)
                     {
                         <tr>
                             <td>@visit.Id</td>
@@ -39,7 +46,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-danger"
-                                    @onclick="()=> VisitService.DeleteAsync(visit.Id)">
+                                        @onclick="async () => await DeleteVisit(visit.Id)">
                                     <i class="oi oi-trash"></i>
                                 </button>
                             </td>
@@ -53,6 +60,13 @@
         <div class="form-floating mt-2">
             <h2>Reservation list</h2>
         </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-primary" @onclick="CreateReservation" type="submit">Create</button>
+        </div>
+        <div class="input-group mb-3">
+            <InputNumber TValue="int" class="form-control" placeholder="Search" @bind-Value="SearchValue2" aria-label="Search" aria-describedby="button-addon2" />
+            <button class="btn btn-primary" @onclick="()=> SearchButtonVisit()" type="button" id="button-addon2">Search</button>
+        </div>
         <div class="form-floating mb-3">
             <table class="table table-hover">
                 <thead>
@@ -62,10 +76,11 @@
 
                         <th>Subscription number</th>
                         <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach(var reservation in ReservationService.ItemList)
+                        @foreach(var reservation in reservationDtos)
                         {
                             <tr>
                                 <td>@reservation.Id</td>
@@ -77,6 +92,12 @@
                                         <i class="oi oi-pencil"></i>
                                     </button>
                                 </td>
+                                <td>
+                                <button class="btn btn-danger"
+                                        @onclick="async () => await DeleteReservation(reservation.Id)">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                                </td>
                             </tr>
                         }
                 </tbody>
@@ -86,6 +107,10 @@
 </div>
 
 @code {
+    private int SearchValue1 { get; set; }
+    private int SearchValue2 { get; set; }
+    private List<VisitDto> visitDtos = new List<VisitDto>();
+    private List<ReservationDto> reservationDtos = new List<ReservationDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole())
@@ -93,6 +118,42 @@
 
         await VisitService.GetAllAsync();
         await ReservationService.GetAllAsync();
+        visitDtos = VisitService.ItemList;
+        reservationDtos = ReservationService.ItemList;
+    }
+    private async Task SearchButtonRes()
+    {
+        if (SearchValue1 > 0)
+        {
+            var result = await VisitService.GetByIdAsync(SearchValue1);
+            if (result != null)
+            {
+                visitDtos = new List<VisitDto> { result };
+                return;
+            }
+            visitDtos = new List<VisitDto>();
+        }
+    }
+    private async Task SearchButtonVisit()
+    {
+        if (SearchValue2 > 0)
+        {
+            var result = await ReservationService.GetByIdAsync(SearchValue2);
+            if (result != null)
+            {
+                reservationDtos = new List<ReservationDto> { result };
+                return;
+            }
+            reservationDtos = new List<ReservationDto>();
+        }
+    }
+    private void VisitCreate()
+    {
+        NavigationManager.NavigateTo("/visit/create");
+    }
+    private void CreateReservation()
+    {
+        NavigationManager.NavigateTo("/reservation/admin/create");
     }
     public void ShowVisit(int id)
     {
@@ -101,5 +162,18 @@
     public void ShowReservation(int id)
     {
         NavigationManager.NavigateTo($"/reservation/{id}");
+    }
+    private async Task DeleteVisit(int id)
+    {
+        await VisitService.DeleteAsync(id);
+        await SearchButtonRes();
+        StateHasChanged();
+    }
+
+    private async Task DeleteReservation(int id)
+    {
+        await ReservationService.DeleteAsync(id);
+        await SearchButtonVisit();
+        StateHasChanged();
     }
 }
