@@ -30,12 +30,10 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
-        function saveAsFile(filename, content) {
-            var blob = new Blob([new Uint8Array(content)], { type: 'text/csv' });
-            var url = URL.createObjectURL(blob);
+        function SaveAsFile(filename, bytesBase64) {
             var link = document.createElement('a');
-            link.href = url;
             link.download = filename;
+            link.href = 'data:application/octet-stream;base64,' + bytesBase64;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -73,10 +73,15 @@ namespace PoolMS.UI.WebAssembly.Service
             var result = await _httpClient.PostAsJsonAsync("api/payment/pay", amout);
             return result.IsSuccessStatusCode;
         }
-        public async Task<HttpResponseMessage> GetPaymentReport()
+        public async Task<HttpResponseMessage> GetPaymentReport(int id)
         {
             await _authService.SetJwtTokenInHeader();
-            return await _httpClient.GetAsync("api/payment/paymentreport");
+            return await _httpClient.GetAsync($"api/payment/incomereport/{id}");
+        }
+        public async Task<HttpResponseMessage> GetMonthlyIncomeReport()
+        {
+            await _authService.SetJwtTokenInHeader();
+            return await _httpClient.GetAsync("api/payment/monthlyIncomeReport");
         }
 
 

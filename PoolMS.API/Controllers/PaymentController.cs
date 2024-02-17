@@ -127,15 +127,32 @@ namespace PoolMS.API.Controllers
             var paymentDto = _mapper.Map<PaymentDto>(payment);
             return Ok(paymentDto);
         }
-    
-        [HttpGet("paymentreport")]
+
+        [HttpGet("incomereport/{id}")]
         [RoleAuth(Role = "Admin")]
-        public async Task<IActionResult> GetPaymentReport()
+        public async Task<IActionResult> GetIncomeReport(int id)
+        {
+            var payments = await _paymentRepository.GetByIdAsync(id);
+            var stream = ReportGenerator.GenerateIncomeReport(payments);
+            var result = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            {
+                FileDownloadName = "IncomeReport.docx"
+            };
+
+            return result;
+        }
+        [HttpGet("monthlyIncomeReport")]
+        public async Task<IActionResult> GetMonthlyIncomeReport()
         {
             var payments = await _paymentRepository.GetAllAsync();
-            var reportPath = ReportGenerator.GeneratePaymentReport(payments.ToList());
-            var fileBytes = System.IO.File.ReadAllBytes(reportPath);
-            return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "PaymentReport.docx");
+            var stream = ReportGenerator.GenerateMonthlyIncomeReport(payments.ToList());
+            var result = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            {
+                FileDownloadName = "MonthlyIncomeReport.docx"
+            };
+
+            return result;
         }
+
     }
 }

@@ -68,6 +68,9 @@
                             <td>@payment.Id</td>
                             <td>@payment.PaymentDay</td>
                             <td>@payment.Amount</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="() => DownloadPaymentReport(payment.Id)">Download Report</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -160,8 +163,14 @@
             NavigationManager.NavigateTo("/");
         }
     }
-private void CreateSub()
+    private void CreateSub()
     {
         NavigationManager.NavigateTo("/subscription/create");
+    }
+    private async Task DownloadPaymentReport(int id)
+    {
+        var response = await PaymentService.GetPaymentReport(id);
+        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        await JSRuntime.InvokeVoidAsync("SaveAsFile", $"PaymentReport_{id}.docx", Convert.ToBase64String(fileBytes));
     }
 }

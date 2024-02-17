@@ -19,8 +19,7 @@
 
             <div class="input-group mb-3">
                 <button class="btn btn-primary"  type="button">Add payment</button>
-               
-
+                <button class="btn btn-primary ml-3" @onclick="DownloadMonthlyIncomeReport" type="button">Download Monthly Income Rep</button>
                 </div>
             <table class="table table-hover">
                 <thead>
@@ -82,7 +81,12 @@
         }
         paymentDtos = PaymentService.ItemList;
     }
-  
+    private async Task DownloadMonthlyIncomeReport()
+    {
+        var response = await PaymentService.GetMonthlyIncomeReport();
+        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        await JSRuntime.InvokeVoidAsync("SaveAsFile", "MonthlyIncomeReport.docx", Convert.ToBase64String(fileBytes));
+    }
 
 
 }

@@ -109,17 +109,12 @@ namespace PoolMS.API.Controllers
         public async Task<IActionResult> GetPoolUsageReport(int Id)
         {
             var pool = await _poolRepository.GetByIdAsync(Id);
-            var filePath = ReportGenerator.GeneratePoolUsageReport(pool);
 
-            var stream = new FileStream(filePath, FileMode.Open);
+            var stream = ReportGenerator.GeneratePoolUsageReport(pool);
             var result = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
             {
                 FileDownloadName = "PoolUsageReport.docx"
             };
-
-            // Delete the temporary file
-            stream.Close();
-            System.IO.File.Delete(filePath);
 
             return result;
         }

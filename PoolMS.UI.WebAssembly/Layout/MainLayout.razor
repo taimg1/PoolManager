@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthService _authService
 
 <div class="page">
     <div class="top-nav">
@@ -24,3 +25,9 @@
         margin-top: 60px; 
     }
 </style>
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await _authService.CheckAndRemoveExpiredToken();
+    }
+}

@@ -192,9 +192,11 @@
     {
         NavigationManager.NavigateTo($"/poolsize/create");
     }
-   public async Task GetDocx(int poolId)
+    public async Task GetDocx(int poolId)
     {
-        await JSRuntime.InvokeVoidAsync("downloadFile", $"api/pool/poolusagereport/{poolId}");
+        var response = await PoolService.GetPoolUsageReport(poolId);
+        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        await JSRuntime.InvokeVoidAsync("SaveAsFile", "PoolUsageReport.docx", Convert.ToBase64String(fileBytes));
     }
 
 
