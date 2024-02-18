@@ -4,6 +4,7 @@
 @inject IService<ReservationDto, ReservationCreateDto, ReservationUpdateDto> ReservationService
 @inject NavigationManager NavigationManager
 @inject IMapper _mapper
+@inject SubscriptionService SubscriptionService
 
 
 <EditForm Model="reservation" class="form-group" OnSubmit="HandleSubmit">
@@ -13,8 +14,13 @@
                 <h2>Reservation</h2>
             </div>
             <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" id="SubscriptionIdInput" @bind-Value="reservation.SubscriptionId" placeholder="Subscription id"></InputNumber>
-                <label for="SubscriptionIdInput">Subscription id</label>
+                <InputSelect TValue="int" class="form-control" @bind-Value="reservation.SubscriptionId" id="SubscriptionIdInput">
+                    @foreach (var subscription in Subscriptions)
+                    {
+                        <option value="@subscription.Id">@subscription.Id</option>
+                    }
+                </InputSelect>
+                <label for="SubscriptionIdInput">Subscription</label>
             </div>
             <div class="form-floating mb-3">
                 <InputDate TValue="DateTime" class="form-control" id="DateInput" @bind-Value="reservation.Date" placeholder="Date"></InputDate>
@@ -30,9 +36,17 @@
 
 @code {
     public ReservationCreateDto reservation = new ReservationCreateDto();
+    public IEnumerable<SubscriptionDto> Subscriptions { get; set; } = new List<SubscriptionDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        await SubscriptionService.GetByUser();
+        Subscriptions = SubscriptionService.ItemList;
+    }
+
     private async Task HandleSubmit()
     {
         await ReservationService.AddAsyncByUser(reservation);
-        NavigationManager.NavigateTo("admin/visits-reservations");
+        NavigationManager.NavigateTo("/visits-reservations");
+        
     }
 }

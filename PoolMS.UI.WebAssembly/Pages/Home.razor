@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthService _authService
 @inject FasService FasService
-
+@inject WeatherService WeatherService
 <PageTitle>Home</PageTitle>
 
 <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
         <h2>Pool list</h2>
         <div lass="input-group mb-3">
             <label for="filter">Filter pools:</label>
-            <select @onchange="FilterPools">
+            <select class="form-select form-select-lg mb-3" @onchange="FilterPools">
                 @foreach (var filter in Filters)
                 {
                     <option value="@filter.FilterValue">@filter.FilterName</option>
@@ -69,20 +69,34 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>
-                    <td>Date</td>
-                    <td>Temperature</td>
-                    <td>Summary</td>
-                    </th>
+                
+                    <th>Date</th>
+                    <th>Low Temperature</th>
+                    <th>High Temperature</th>
+                    <th>Summary</th>
+                    <th>Wind Speed</th>
+                    
                 </tr>
             </thead>
+            <tbody>
+                @foreach (var weather in WeatherService.WeatherReport)
+                {
+                    <tr>
+                        <td>@weather.Date</td>
+                        <td>@weather.LowTemperature</td>
+                        <td>@weather.HighTemperature</td>
+                        <td>@weather.Summary</td>
+                        <td>@weather.WindSpeed</td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 </div>
 <div class="row mt-5 d-flex justify-content-end">
     <div class="col-12 col-md-4 shadow-sm mx-5 ">
         <h2>Useful exercises</h2>
-
+        asp.net core blazor webassembly
     </div>
 </div>
 
@@ -103,6 +117,7 @@
     {
         await _authService.CheckAndRemoveExpiredToken();
         await PoolService.GetAllAsync();
+        await WeatherService.GetWeatherReport();
         Pools = PoolService.ItemList;
     }
 

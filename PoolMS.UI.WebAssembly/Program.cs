@@ -36,7 +36,7 @@ namespace PoolMS.UI.WebAssembly
             builder.Services.AddScoped<AuthorizeAdmin>();
             builder.Services.AddScoped<SubscriptionService>();  
             builder.Services.AddScoped<FasService>();
-
+            builder.Services.AddScoped<WeatherService>();
 
             builder.Services.AddAuthorizationCore();
            

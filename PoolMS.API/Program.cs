@@ -70,11 +70,7 @@ namespace PoolMS.API
             builder.Services.AddScoped<IRepository<Visit>,VisitRepository>();    
             builder.Services.AddScoped<IRepository<Role>,RoleRepository>();
             builder.Services.AddScoped<IJwtProvider,JwtProvider>();
-
-
-        
-
-
+            builder.Services.AddHttpClient();
 
             builder.Services.AddScoped<UserRepository>();
 
