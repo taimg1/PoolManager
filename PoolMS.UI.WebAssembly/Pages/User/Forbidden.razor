@@ -1,5 +1,36 @@
 ﻿@page "/forbidden"
 @inject NavigationManager NavigationManager
+<style>
+    .forbidden-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.forbidden-page h1 {
+  font-size: 2em;
+  margin-top: 0;
+}
+
+.forbidden-page p {
+  margin: 10px 0;
+}
+
+.forbidden-page a {
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #000;
+}
+
+.forbidden-page a:hover {
+  color: #f00;
+}
+</style>
+
+<div class="forbidden-page">
+  <h1>403 Forbidden</h1>
+  <p>You haven`t permision.</p>
+  <a href="@NavigationManager.BaseUri">Back to gome</a>
+</div>
 
 @code {
 
