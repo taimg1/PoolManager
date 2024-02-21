@@ -22,7 +22,8 @@
                 <button type="submit" class="btn btn-dark">Submit</button>
             </div>
             <div class="mt-2">
-                <a href="Reg.html">Already have not an account</a>
+                <a @onclick="NavigateToRegister">Already have not an account</a>
+
             </div>
         </div>
     </div>
@@ -43,5 +44,10 @@
            
 
         }
+    private void NavigateToRegister()
+    {
+        NavigationManager.NavigateTo("/user/register");
+    }
+
 
 }

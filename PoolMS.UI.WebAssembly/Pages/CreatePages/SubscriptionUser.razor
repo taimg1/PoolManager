@@ -44,7 +44,9 @@
     }
     private async Task HandleSubmit()
     {
+        
         await LocalStorage.SetItemAsync("subscription", subscription);
+        await SubscriptionService.AddByUser(subscription);
         NavigationManager.NavigateTo("/payment");
     }
 }

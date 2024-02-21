@@ -5,6 +5,8 @@
 @inject NavigationManager NavigationManager
 @inject AuthorizeAdmin AuthorizeAdmin
 @inject IMapper _mapper
+@inject IService<PoolSizeDto,PoolSizeCreateDto,PoolSizeUpdateDto> PoolSizeService
+
 
 <EditForm Model="pool" class="form-group" OnSubmit="HandleSubmit">
 
@@ -14,9 +16,15 @@
                 <h2>Pool</h2>
             </div>
             <div class="form-floating mb-3">
-                <InputNumber TValue="int" class="form-control" @bind-Value="pool.SizeId" id="floatingInput" placeholder="Size id"></InputNumber>
+                <InputSelect TValue="int" class="form-control" @bind-Value="pool.SizeId" id="floatingInput">
+                    @foreach (var poolSize in poolSizes)
+                    {
+                        <option value="@poolSize.Id">@poolSize.Title</option>
+                    }
+                </InputSelect>
                 <label for="floatingInput">Size id</label>
             </div>
+
             <div class="form-floating mb-3">
                 <InputNumber TValue="int" class="form-control" @bind-Value="pool.TotalCapacity" id="CapacityInput" placeholder="Total capacity"></InputNumber>
                 <label for="CapacityInput">Total capacity</label>
@@ -33,11 +41,15 @@
 </EditForm>
 @code {
     PoolCreateDto pool = new PoolCreateDto();
+    public IEnumerable<PoolSizeDto> poolSizes { get; set; } = new List<PoolSizeDto>();
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthorizeAdmin.CheckUserRole()) 
             return;
+        await PoolSizeService.GetAllAsync();
+        poolSizes = PoolSizeService.ItemList;
     }
+
     private async Task HandleSubmit()
     {
         await PoolService.AddAsync(pool);
